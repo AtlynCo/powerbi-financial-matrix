@@ -1,5 +1,6 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { deflateSync } from "node:zlib";
+import { chromium } from "@playwright/test";
 
 // Original 20px statement/grid glyph; no fonts, downloaded artwork or external assets.
 const crc32 = (bytes) => {
@@ -35,3 +36,11 @@ writeFileSync("assets/icon.png", Buffer.concat([
   Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
   chunk("IHDR", header), chunk("IDAT", deflateSync(pixels)), chunk("IEND", Buffer.alloc(0))
 ]));
+const browser = await chromium.launch();
+try {
+  const page = await browser.newPage({ viewport: { width: 300, height: 300 }, deviceScaleFactor: 1 });
+  await page.setContent('<style>html,body{margin:0}</style>' + readFileSync("assets/logo.svg", "utf8"));
+  await page.screenshot({ path: "assets/logo.png" });
+} finally {
+  await browser.close();
+}

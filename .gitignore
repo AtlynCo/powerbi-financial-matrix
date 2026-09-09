@@ -6,3 +6,5 @@ test-results/
 webpack.statistics.*.html
 *.log
 .DS_Store
+scripts/tmdl/obj/
+scripts/tmdl/bin/

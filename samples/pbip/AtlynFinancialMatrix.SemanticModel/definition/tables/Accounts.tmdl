@@ -1,0 +1,38 @@
+table Accounts
+
+	column AccountID
+		dataType: string
+		sourceColumn: AccountID
+		summarizeBy: none
+
+	column AccountLabel
+		dataType: string
+		sourceColumn: AccountLabel
+		summarizeBy: none
+
+	column StatementClass
+		dataType: string
+		sourceColumn: StatementClass
+		summarizeBy: none
+
+	partition Accounts = m
+		mode: import
+		source = ```
+			// Query name: Accounts
+			let
+			    Source = #table(
+			        type table [AccountID = text, AccountLabel = text, StatementClass = text],
+			        {
+			            {"PRODUCT", "Product revenue", "Revenue"},
+			            {"SERVICE", "Service revenue", "Revenue"},
+			            {"LAUNCH", "New product revenue", "Revenue"},
+			            {"MATERIALS", "Materials", "CostOfSales"},
+			            {"DELIVERY", "Delivery", "CostOfSales"},
+			            {"PAYROLL", "Payroll", "OperatingExpense"},
+			            {"OCCUPANCY", "Occupancy", "OperatingExpense"},
+			            {"MARKETING", "Marketing", "OperatingExpense"}
+			        }
+			    )
+			in
+			    Source
+			```

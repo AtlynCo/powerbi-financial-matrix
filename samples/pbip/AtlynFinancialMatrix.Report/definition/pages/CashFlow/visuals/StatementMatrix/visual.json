@@ -1,0 +1,140 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "StatementMatrix",
+  "position": {
+    "x": 24,
+    "y": 120,
+    "width": 1552,
+    "height": 752,
+    "z": 2,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
+    "query": {
+      "queryState": {
+        "Lines": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CashFlowLines"
+                    }
+                  },
+                  "Property": "LineID"
+                }
+              },
+              "queryRef": "CashFlowLines.LineID",
+              "nativeQueryRef": "LineID",
+              "active": true
+            }
+          ]
+        },
+        "Period": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Period"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "Period.Period",
+              "nativeQueryRef": "Period",
+              "active": true
+            }
+          ]
+        },
+        "Actual": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CashFlowFact"
+                    }
+                  },
+                  "Property": "CF Actual"
+                }
+              },
+              "queryRef": "CashFlowFact.CF Actual",
+              "nativeQueryRef": "CF Actual"
+            }
+          ]
+        },
+        "Budget": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CashFlowFact"
+                    }
+                  },
+                  "Property": "CF Budget"
+                }
+              },
+              "queryRef": "CashFlowFact.CF Budget",
+              "nativeQueryRef": "CF Budget"
+            }
+          ]
+        },
+        "Prior": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CashFlowFact"
+                    }
+                  },
+                  "Property": "CF Prior"
+                }
+              },
+              "queryRef": "CashFlowFact.CF Prior",
+              "nativeQueryRef": "CF Prior"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "statement": [
+        {
+          "properties": {
+            "lines": {
+              "expr": {
+                "Literal": {
+                  "Value": "'[\n  {\"id\":\"cf.opening\",\"label\":\"Opening cash\",\"order\":10,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"none\"},\n  {\"id\":\"cf.operating\",\"label\":\"Net cash from operating activities\",\"order\":20,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"cf.investing\",\"label\":\"Net cash used in investing activities\",\"order\":30,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"cf.financing\",\"label\":\"Net cash from financing activities\",\"order\":40,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"cf.net\",\"label\":\"Net change in cash\",\"order\":50,\"type\":\"subtotal\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"cf.closing\",\"label\":\"Closing cash\",\"order\":60,\"type\":\"subtotal\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"cf.check\",\"label\":\"Cash bridge check (expected zero)\",\"order\":70,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"none\"}\n]'"
+                }
+              }
+            },
+            "variances": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "direction": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

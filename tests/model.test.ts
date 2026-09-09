@@ -210,3 +210,45 @@ test("documented offline P&L inputs satisfy the live metadata and hierarchical m
     assert.deepEqual(getCell(materials, result.columns[3]!).number, { state: "number", value: -3000 });
     assert.equal(getCell(materials, result.columns[3]!).favorable, "unfavorable");
 });
+
+test("metadata rejects duplicate JSON property tokens, including escaped spelling, with indexed diagnostics", () => {
+    const original = JSON.stringify([line("revenue", 1)]);
+    expectContract(() => parseLines(original.replace('"sign":1', '"sign":1,"sign":-1')), "Error_DuplicateProperty");
+    expectContract(() => parseLines(original.replace('"sign":1', '"sign":1,"s\\u0069gn":-1')), "Error_DuplicateProperty");
+    assert.throws(() => parseLines(JSON.stringify([line("ok", 1), { ...line("bad", 2), sign: 7, formula: "never run" }])),
+        error => error instanceof ContractError && error.detail.includes("[2] bad") && error.detail.includes("sign") && error.detail.includes("unknown formula"));
+    const quoted = line("safe", 1, { label: '"id": fake, braces } { and escaped \\ text' });
+    assert.equal(parseLines(JSON.stringify([quoted])).get("safe")?.label, quoted.label);
+});
+
+test("equivalent host subtotal values merge by slot, not JSON serialization or property insertion order", () => {
+    const { data, lines } = hierarchyFixture();
+    const parent = data.matrix!.rows.root.children![2]!;
+    parent.values = { 0: { valueSourceIndex: 0, value: 60 } };
+    parent.children!.push({ isSubtotal: true, values: { 0: { value: 60 }, 1: { value: 50, valueSourceIndex: 1 }, 2: { value: 40, valueSourceIndex: 2 } } });
+    const result = convert(data, config(lines), true);
+    assert.deepEqual(getCell(result.rows[0]!, result.columns[1]!).number, { state: "number", value: 50 });
+    parent.values = {};
+    const emptyContainer = convert(data, config(lines), true);
+    assert.deepEqual(getCell(emptyContainer.rows[0]!, emptyContainer.columns[0]!).number, { state: "number", value: 60 });
+});
+
+test("missing modern group values cannot silently fall back to a stale legacy Line ID", () => {
+    const data = fixture();
+    data.matrix!.rows.root.children![0]!.levelValues = [{ levelSourceIndex: 0 }];
+    expectContract(() => convert(data, config(), true), "Error_LineId");
+});
+
+test("undefined and nonfinite comparisons never receive favorable/unfavorable coloring", () => {
+    const data = fixture();
+    data.matrix!.rows.root.children = [node("revenue", [10, 0, Number.MAX_VALUE])];
+    const result = convert(data, config(), true);
+    const zero = getCell(result.rows[0]!, result.columns[4]!);
+    assert.equal(zero.number.state, "zeroReference");
+    assert.equal(zero.favorable, "neutral");
+    result.rows[0]!.values![0]!.value = Number.MAX_VALUE;
+    result.rows[0]!.values![1]!.value = -Number.MAX_VALUE;
+    const overflow = getCell(result.rows[0]!, result.columns[3]!);
+    assert.equal(overflow.number.state, "invalid");
+    assert.equal(overflow.favorable, "neutral");
+});

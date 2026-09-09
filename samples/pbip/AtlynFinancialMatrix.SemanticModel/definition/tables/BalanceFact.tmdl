@@ -1,0 +1,146 @@
+table BalanceFact
+
+	measure 'Balance Amount' = ```
+		SUM ( 'BalanceFact'[Amount] )
+		```
+		isHidden
+
+	measure 'Balance at Period End' = ```
+		VAR LastPeriod = MAX ( 'Period'[PeriodKey] )
+		RETURN
+		    CALCULATE (
+		        [Balance Amount],
+		        REMOVEFILTERS ( 'Period' ),
+		        TREATAS ( { LastPeriod }, 'Period'[PeriodKey] )
+		    )
+		```
+		isHidden
+
+	measure 'Balance Sheet Value' = ```
+		VAR RowID =
+		    IF ( ISINSCOPE ( 'BalanceLines'[LineID] ), SELECTEDVALUE ( 'BalanceLines'[LineID] ) )
+		VAR Assets =
+		    CALCULATE (
+		        [Balance at Period End],
+		        KEEPFILTERS ( 'BalanceFact'[AccountID] IN { "CASH", "RECEIVABLE", "INVENTORY", "FIXED_ASSETS" } )
+		    )
+		VAR LiabilitiesAndEquity =
+		    CALCULATE (
+		        [Balance at Period End],
+		        KEEPFILTERS ( 'BalanceFact'[AccountID] IN { "PAYABLE", "DEBT", "EQUITY" } )
+		    )
+		RETURN
+		    SWITCH (
+		        RowID,
+		        "bs.cash", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "CASH" ) ),
+		        "bs.receivables", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "RECEIVABLE" ) ),
+		        "bs.inventory", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "INVENTORY" ) ),
+		        "bs.fixed-assets", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "FIXED_ASSETS" ) ),
+		        "bs.assets", Assets,
+		        "bs.payables", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "PAYABLE" ) ),
+		        "bs.debt", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "DEBT" ) ),
+		        "bs.equity", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "EQUITY" ) ),
+		        "bs.liabilities-equity", LiabilitiesAndEquity,
+		        "bs.check", IF ( NOT ISBLANK ( Assets ) && NOT ISBLANK ( LiabilitiesAndEquity ), Assets - LiabilitiesAndEquity ),
+		        BLANK ()
+		    )
+		```
+		isHidden
+
+	measure 'BS Actual' = ```
+		CALCULATE (
+		    [Balance Sheet Value],
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'BalanceFact'[Scenario] = "Actual"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	measure 'BS Budget' = ```
+		CALCULATE (
+		    [Balance Sheet Value],
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'BalanceFact'[Scenario] = "Budget"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	measure 'BS Prior' = ```
+		CALCULATE (
+		    [Balance Sheet Value],
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'BalanceFact'[Scenario] = "Prior"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	column PeriodKey
+		dataType: int64
+		sourceColumn: PeriodKey
+		summarizeBy: none
+		isHidden
+
+	column AccountID
+		dataType: string
+		sourceColumn: AccountID
+		summarizeBy: none
+		isHidden
+
+	column Scenario
+		dataType: string
+		sourceColumn: Scenario
+		summarizeBy: none
+		isHidden
+
+	column Amount
+		dataType: double
+		sourceColumn: Amount
+		summarizeBy: none
+		isHidden
+
+	partition BalanceFact = m
+		mode: import
+		source = ```
+			// Query name: BalanceFact
+			// Synthetic period-end stocks, not transactions; do not sum across months.
+			let
+			    Seed = #table(
+			        type table [
+			            PeriodKey = number,
+			            AccountID = text,
+			            Actual = number,
+			            Budget = number,
+			            Prior = number
+			        ],
+			        {
+			            {202501, "CASH", 50000, 48000, 40000},
+			            {202501, "RECEIVABLE", 30000, 32000, 25000},
+			            {202501, "INVENTORY", 20000, 20000, 18000},
+			            {202501, "FIXED_ASSETS", 100000, 100000, 90000},
+			            {202501, "PAYABLE", 25000, 26000, 23000},
+			            {202501, "DEBT", 75000, 74000, 60000},
+			            {202501, "EQUITY", 100000, 100000, 90000},
+			            {202502, "CASH", 62000, 60000, 44000},
+			            {202502, "RECEIVABLE", 32000, 33000, 27000},
+			            {202502, "INVENTORY", 19000, 20000, 18000},
+			            {202502, "FIXED_ASSETS", 101000, 101000, 91000},
+			            {202502, "PAYABLE", 27000, 28000, 24000},
+			            {202502, "DEBT", 77000, 76000, 61000},
+			            {202502, "EQUITY", 110000, 110000, 95000},
+			            {202503, "CASH", 73000, 70000, 46000},
+			            {202503, "RECEIVABLE", 33000, 35000, 29000},
+			            {202503, "INVENTORY", 18000, 19000, 17000},
+			            {202503, "FIXED_ASSETS", 102000, 102000, 92000},
+			            {202503, "PAYABLE", 28000, 29000, 25000},
+			            {202503, "DEBT", 78000, 77000, 62000},
+			            {202503, "EQUITY", 120000, 120000, 97000}
+			        }
+			    ),
+			    Long = Table.Unpivot(Seed, {"Actual", "Budget", "Prior"}, "Scenario", "Amount"),
+			    Typed = Table.TransformColumnTypes(
+			        Long,
+			        {{"PeriodKey", Int64.Type}, {"Scenario", type text}, {"Amount", type number}}
+			    )
+			in
+			    Typed
+			```

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { readArtifact } from "./artifact.mjs";
 
@@ -23,4 +23,8 @@ assert.ok(source.includes("renderingStarted") && source.includes("renderingFinis
 assert.ok(source.includes("getFormattingModel") && source.includes("withMatrixNode"));
 const notices = readFileSync("THIRD-PARTY-NOTICES.txt", "utf8");
 assert.ok(notices.includes("powerbi-visuals-utils-formattingutils") && notices.includes("MIT License"));
+const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+assert.ok(pkg.devDependencies["eslint-plugin-powerbi-visuals"], "Official certification lint plugin is required");
+assert.equal(pkg.scripts.eslint, "npx eslint . --ext .js,.jsx,.ts,.tsx");
+if (existsSync(".github/workflows")) assert.equal(readdirSync(".github/workflows").length, 0, "GitHub Actions are not permitted for this release");
 console.log("Local source/bundle certification-oriented audit passed. This is not Microsoft certification or a security review.");

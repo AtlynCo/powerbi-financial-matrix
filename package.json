@@ -6,6 +6,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests scripts samples/check-sources.mjs",
+    "eslint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "tsx --test tests/model.test.ts",
     "test:samples": "node samples/check-sources.mjs",
     "prebuild": "npm run notices",
@@ -13,6 +14,12 @@
     "package": "npm run build && npm run artifact:validate",
     "artifact:validate": "node scripts/validate-artifact.mjs",
     "test:browser": "playwright test",
+    "test:evidence": "playwright test --config playwright.evidence.config.ts",
+    "evidence:validate": "node scripts/validate-evidence.mjs",
+    "release:local": "node scripts/release-local.mjs",
+    "dossier": "node scripts/dossier.mjs",
+    "sample:build": "node scripts/build-sample.mjs",
+    "sample:validate": "node --test tests/sample-structure.test.mjs && node scripts/validate-sample.mjs && node scripts/validate-tmdl.mjs",
     "audit:dependencies": "npm audit --omit=dev",
     "audit:tooling": "npm audit",
     "audit:certification": "node scripts/certification-audit.mjs",
@@ -29,7 +36,9 @@
     "@eslint/js": "9.39.4",
     "@playwright/test": "1.63.0",
     "@types/node": "24.10.1",
+    "ajv": "8.20.0",
     "eslint": "9.39.4",
+    "eslint-plugin-powerbi-visuals": "1.1.1",
     "jszip": "3.10.1",
     "powerbi-visuals-tools": "7.2.1",
     "tsx": "4.23.13",
@@ -38,7 +47,9 @@
   },
   "overrides": {
     "qs": "6.16.0",
-    "sockjs": { "uuid": "11.1.1" }
+    "sockjs": {
+      "uuid": "11.1.1"
+    }
   },
   "engines": {
     "node": ">=22.12.0"

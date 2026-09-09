@@ -4,6 +4,7 @@
 
 - Windows Power BI Desktop for assembling/importing the sample report.
 - Node.js **22.12 or newer**, npm and a checkout of this private repository.
+- .NET SDK **8 or newer** for the optional standalone PBIP check and required full release gate's official TMDL parser; pinned NuGet packages/lockfile and isolated caches are documented in [PBIP sample](PBIP-SAMPLE.md).
 - For Windows builds: **PowerShell 7 (`pwsh`) on PATH**, using a currently supported release for the .NET cryptography APIs in the certificate helper. The non-Windows build path instead requires **OpenSSL on PATH**; Desktop report assembly still requires Windows.
 - Network access for **initial dependency/browser acquisition only**, unless dependencies/browser binaries have been pre-provisioned through your approved process.
 - Permission under your organization's Power BI tenant policy to import a private custom visual.
@@ -67,30 +68,35 @@ Useful existing commands:
 | --- | --- |
 | `npm run typecheck` | TypeScript checks. |
 | `npm run lint` | Existing ESLint rules for implementation/tests/scripts. |
+| `npm run eslint` | Microsoft's documented full lint command with official Power BI recommended rules on runtime source. |
 | `npm test` | Financial transformation/model unit tests. |
 | `npm run test:samples` | Offline literal sample-source/arithmetic assertions; not M/DAX execution. |
 | `npm run build` | SDK build; prebuild updates dependency notices. |
 | `npm run package` | Build plus artifact validation. |
 | `npm run artifact:validate` | Validate the built artifact; write its SHA-256 sidecar. |
 | `npm run test:browser` | Packaged-artifact browser harness with a mocked Power BI host. |
+| `npm run test:evidence` | Three 1366 x 768 packaged statement screenshots and five-workload raw performance distributions; no native-host claim. |
+| `npm run evidence:validate` | Package-bound screenshot dimensions/size/provenance, full browser-suite outcomes and raw percentile arithmetic. |
+| `npm run release:local` | Record all final local gates and logs from a clean source commit; does not submit or publish. |
+| `npm run sample:build` | Assemble the fully bound offline project and exact official visual resources. |
+| `npm run sample:validate` | Offline schemas/bindings/hashes plus Microsoft's actual TMDL deserializer; not M/DAX execution. |
+| `npm run dossier` | Immutable source/package/PBIP/assets/evidence bundle and SHA-256 manifest from a clean validated commit. |
 | `npm run audit:dependencies` | Production dependency advisory check; requires advisory-service access. |
 | `npm run audit:tooling` | Broader tooling/development dependency advisory check. |
 | `npm run audit:certification` | Certification-oriented static checks, **not certification**. |
 | `npm run notices` | Regenerate dependency notices. |
-| `npm run icons` | Regenerate the original icon asset. |
+| `npm run icons` | Regenerate the original 20px icon and 300px logo; requires the provisioned Chromium browser. |
 | `npm run verify` | Typecheck, lint, unit/sample-source tests, package/validate, browser tests and production/static audits. |
 
 Audit results are time-dependent; record the date and outputs. A nonzero audit/build exit needs investigation, not a claim that the release is ready. Browser assertions cannot establish that the same feature works with the real Desktop/service host.
 
-The [publication checklist](PUBLICATION-CHECKLIST.md#reported-development-snapshot) records the local implementation test/audit snapshot and its limits. Both production and full tooling audits reported zero advisories in that run; one must not be used as evidence for the other, and neither is a permanent security guarantee.
+The [release-quality evidence guide](RELEASE-QUALITY.md) explains the current local gates and their limits. The immutable submission manifest and preserved command logs identify a specific run. Production and full tooling audits are separate; neither is a permanent security guarantee.
 
-## Private CI
+## Local release gates only
 
-`.github\workflows\validate.yml` runs on pull requests and pushes to `main` using **windows-latest** and **Node 24**. Its steps run `npm ci --no-fund`, install the Chromium test browser, execute `npm run verify`, then run the separate full `npm run audit:tooling`. GitHub Actions are pinned to commit hashes and workflow permissions are limited to repository contents read.
+All build, browser, package, sample and audit commands run locally. GitHub Actions and other GitHub-hosted CI/CD are not used or permitted for this release. GitHub is used only for authorized source delivery and review. No workflow, cloud coding session, Codespaces build or automatic publication step is required.
 
-The workflow retains only `.pbiviz`, SHA-256 sidecars, `dist\artifact-validation.json` and `test-results\browser-results.json` as an internal artifact for seven days. It does not upload certificate/key/passphrase files or tool-home folders. It has **no publication, release or AppSource step**. A configured workflow is not evidence of a successful remote run; inspect the actual run and retain its logs.
-
-The offline sample check is available as `npm run test:samples` (or `node .\samples\check-sources.mjs`) and runs within `verify` and CI. It validates literal sources and arithmetic, not the Power Query or DAX engines.
+The offline sample check is available as `npm run test:samples` (or `node .\samples\check-sources.mjs`) and runs within `verify`. It validates literal sources and arithmetic, not the Power Query or DAX engines. Preserve the local package/hash and evidence in an approved durable artifact location, excluding the temporary tool-home, certificate and key material.
 
 ## Artifact and integrity
 
@@ -111,6 +117,8 @@ Get-Content .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.0.0.
 Compare the digest values, not merely the filenames. Hashing establishes artifact identity, not Microsoft approval or legal permission to distribute. `assets\icon.png` is the original 20 × 20 visual icon. Full production dependency licenses and embedded Globalize copyright notices are preserved in the packaged `ThirdParty_Notices` localization resource; validation compares that text with `THIRD-PARTY-NOTICES.txt`. This avoids depending on a webpack license sidecar that the SDK archive may omit. Dependency notices are separate from the repository's original-code licensing decision.
 
 ## Import into Power BI Desktop
+
+For the prepared sample, first follow [PBIP sample](PBIP-SAMPLE.md): generate and open `dist\sample-report\AtlynFinancialMatrix.pbip`. Tables, relationships, visuals and fields are already bound. Refresh/compare/save as PBIX in Desktop; do not substitute a renamed file. The manual steps below remain useful for adding the visual to another report or studying the canonical source recipe.
 
 1. Open a new, local Desktop report. No sign-in is needed for constructing the offline sample itself.
 2. In the **Visualizations** pane, select **… → Import a visual from a file** (in newer on-object UI, use the equivalent custom-visual import command).

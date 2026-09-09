@@ -1,0 +1,140 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "StatementMatrix",
+  "position": {
+    "x": 24,
+    "y": 120,
+    "width": 1552,
+    "height": 752,
+    "z": 2,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
+    "query": {
+      "queryState": {
+        "Lines": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BalanceLines"
+                    }
+                  },
+                  "Property": "LineID"
+                }
+              },
+              "queryRef": "BalanceLines.LineID",
+              "nativeQueryRef": "LineID",
+              "active": true
+            }
+          ]
+        },
+        "Period": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Period"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "Period.Period",
+              "nativeQueryRef": "Period",
+              "active": true
+            }
+          ]
+        },
+        "Actual": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BalanceFact"
+                    }
+                  },
+                  "Property": "BS Actual"
+                }
+              },
+              "queryRef": "BalanceFact.BS Actual",
+              "nativeQueryRef": "BS Actual"
+            }
+          ]
+        },
+        "Budget": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BalanceFact"
+                    }
+                  },
+                  "Property": "BS Budget"
+                }
+              },
+              "queryRef": "BalanceFact.BS Budget",
+              "nativeQueryRef": "BS Budget"
+            }
+          ]
+        },
+        "Prior": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BalanceFact"
+                    }
+                  },
+                  "Property": "BS Prior"
+                }
+              },
+              "queryRef": "BalanceFact.BS Prior",
+              "nativeQueryRef": "BS Prior"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "statement": [
+        {
+          "properties": {
+            "lines": {
+              "expr": {
+                "Literal": {
+                  "Value": "'[\n  {\"id\":\"bs.cash\",\"label\":\"Cash\",\"order\":10,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.receivables\",\"label\":\"Receivables\",\"order\":20,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.inventory\",\"label\":\"Inventory\",\"order\":30,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.fixed-assets\",\"label\":\"Fixed assets\",\"order\":40,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.assets\",\"label\":\"Total assets\",\"order\":50,\"type\":\"subtotal\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.payables\",\"label\":\"Payables\",\"order\":60,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.debt\",\"label\":\"Debt\",\"order\":70,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.equity\",\"label\":\"Equity\",\"order\":80,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.liabilities-equity\",\"label\":\"Total liabilities and equity\",\"order\":90,\"type\":\"subtotal\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"both\"},\n  {\"id\":\"bs.check\",\"label\":\"Balance check (expected zero)\",\"order\":100,\"type\":\"detail\",\"unit\":\"currency\",\"format\":\"$#,0;($#,0);$0\",\"sign\":1,\"favorable\":\"neutral\",\"variance\":\"none\"}\n]'"
+                }
+              }
+            },
+            "variances": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "direction": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
