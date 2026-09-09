@@ -1,0 +1,23 @@
+{
+  "visual": {
+    "name": "atlynFinancialMatrix",
+    "displayName": "Atlyn Financial Matrix",
+    "guid": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Read-only financial statements with explicit line semantics, model-supplied totals and bounded scrolling.",
+    "supportUrl": "https://www.atlynco.com/docs/faq",
+    "gitHubUrl": "https://github.com/AtlynCo/powerbi-financial-matrix"
+  },
+  "apiVersion": "5.11.0",
+  "author": { "name": "Atlyn", "email": "atlyn.help@gmail.com" },
+  "assets": { "icon": "assets/icon.png" },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": [
+    "stringResources/en-US/resources.resjson",
+    "stringResources/fr-FR/resources.resjson"
+  ]
+}

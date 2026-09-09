@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "kind": "manual-desktop-assembly-recipe",
+  "notPowerBIImportFormat": true,
+  "desktopValidated": false,
+  "visualGuid": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
+  "visualVersion": "1.0.0.0",
+  "queries": [
+    {"name":"Period","source":"pnl\\Period.pq","optional":false},
+    {"name":"Accounts","source":"pnl\\Accounts.pq","optional":false},
+    {"name":"Facts","source":"pnl\\Facts.pq","optional":false},
+    {"name":"StatementLines","source":"pnl\\StatementLines.pq","optional":false},
+    {"name":"BalanceFact","source":"patterns\\BalanceFact.pq","optional":true},
+    {"name":"BalanceLines","source":"patterns\\BalanceLines.pq","optional":true},
+    {"name":"CashFlowFact","source":"patterns\\CashFlowFact.pq","optional":true},
+    {"name":"CashFlowLines","source":"patterns\\CashFlowLines.pq","optional":true}
+  ],
+  "measureSources": [
+    {"source":"pnl\\Statement-measures.dax","homeTable":"Facts","optional":false},
+    {"source":"patterns\\Balance-measures.dax","homeTable":"BalanceFact","optional":true},
+    {"source":"patterns\\CashFlow-measures.dax","homeTable":"CashFlowFact","optional":true}
+  ],
+  "relationships": [
+    {"one":"Period[PeriodKey]","many":"Facts[PeriodKey]","active":true,"crossFilter":"single","optional":false},
+    {"one":"Accounts[AccountID]","many":"Facts[AccountID]","active":true,"crossFilter":"single","optional":false},
+    {"one":"Period[PeriodKey]","many":"BalanceFact[PeriodKey]","active":true,"crossFilter":"single","optional":true},
+    {"one":"Period[PeriodKey]","many":"CashFlowFact[PeriodKey]","active":true,"crossFilter":"single","optional":true}
+  ],
+  "disconnectedTables": ["StatementLines", "BalanceLines", "CashFlowLines"],
+  "sortBy": [
+    {"column":"Period[Period]","sortColumn":"Period[PeriodSort]"},
+    {"column":"StatementLines[SectionID]","sortColumn":"StatementLines[SectionOrder]"},
+    {"column":"StatementLines[LineID]","sortColumn":"StatementLines[LineOrder]"},
+    {"column":"BalanceLines[LineID]","sortColumn":"BalanceLines[LineOrder]","optional":true},
+    {"column":"CashFlowLines[LineID]","sortColumn":"CashFlowLines[LineOrder]","optional":true}
+  ],
+  "pageDefaults": {
+    "width":1600,
+    "height":900,
+    "title":{"x":24,"y":8,"width":1552,"height":36},
+    "periodSlicer":{"field":"Period[Period]","x":24,"y":48,"width":1552,"height":64,"defaultSelection":["Jan 2025","Feb 2025","Mar 2025"]},
+    "matrix":{"x":24,"y":120,"width":1552,"height":752},
+    "statement":{"variances":true,"direction":false}
+  },
+  "pages": [
+    {
+      "name":"P&L",
+      "title":"Synthetic operating P&L — reporting currency USD",
+      "optional":false,
+      "roles":{"Lines":["StatementLines[SectionID]","StatementLines[LineID]"],"Period":["Period[Period]"],"Actual":["[Actual]"],"Budget":["[Budget]"],"Prior":["[Prior]"]},
+      "lineMetadataSource":"pnl\\line-metadata.json",
+      "hostHierarchyDepth":2,
+      "localInitialPresentation":"expanded delivered descendants"
+    },
+    {
+      "name":"Balance sheet",
+      "title":"Synthetic balance sheet — period-end snapshots",
+      "optional":true,
+      "roles":{"Lines":["BalanceLines[LineID]"],"Period":["Period[Period]"],"Actual":["[BS Actual]"],"Budget":["[BS Budget]"],"Prior":["[BS Prior]"]},
+      "lineMetadataSource":"patterns\\balance-line-metadata.json",
+      "hostHierarchyDepth":1
+    },
+    {
+      "name":"Cash flow",
+      "title":"Synthetic cash bridge — contiguous periods only",
+      "optional":true,
+      "roles":{"Lines":["CashFlowLines[LineID]"],"Period":["Period[Period]"],"Actual":["[CF Actual]"],"Budget":["[CF Budget]"],"Prior":["[CF Prior]"]},
+      "lineMetadataSource":"patterns\\cash-flow-line-metadata.json",
+      "hostHierarchyDepth":1
+    }
+  ]
+}

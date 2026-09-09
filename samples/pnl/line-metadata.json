@@ -1,0 +1,20 @@
+[
+  {"id":"pl.revenue","label":"Revenue","order":10,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.product-revenue","label":"Product revenue","order":11,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.service-revenue","label":"Service revenue","order":12,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.launch-revenue","label":"New product revenue","order":13,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.cost-of-sales","label":"Cost of sales","order":20,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.materials","label":"Materials","order":21,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.delivery","label":"Delivery","order":22,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.gross","label":"Gross profitability","order":30,"type":"heading","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"none"},
+  {"id":"pl.gross-profit","label":"Gross profit","order":31,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.gross-margin","label":"Gross margin","order":32,"type":"detail","unit":"percent","format":"0.0%;(0.0%);0.0%","sign":1,"favorable":"higher","variance":"absolute"},
+  {"id":"pl.operating-expenses","label":"Operating expenses","order":40,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.payroll","label":"Payroll","order":41,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.occupancy","label":"Occupancy","order":42,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.marketing","label":"Marketing","order":43,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.results","label":"Operating performance","order":50,"type":"heading","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"none"},
+  {"id":"pl.operating-profit","label":"Operating profit","order":51,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.operating-margin","label":"Operating margin","order":52,"type":"detail","unit":"percent","format":"0.0%;(0.0%);0.0%","sign":1,"favorable":"higher","variance":"absolute"},
+  {"id":"pl.customers","label":"Active customers (distinct)","order":53,"type":"detail","unit":"number","format":"#,0;(#,0);0","sign":1,"favorable":"neutral","variance":"absolute"}
+]

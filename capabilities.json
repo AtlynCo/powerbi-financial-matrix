@@ -1,0 +1,57 @@
+{
+  "dataRoles": [
+    { "name": "Lines", "displayName": "Line ID hierarchy", "displayNameKey": "Role_Lines", "kind": "Grouping" },
+    { "name": "Period", "displayName": "Period", "displayNameKey": "Role_Period", "kind": "Grouping" },
+    { "name": "Actual", "displayName": "Actual", "displayNameKey": "Role_Actual", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "Budget", "displayName": "Budget", "displayNameKey": "Role_Budget", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "Prior", "displayName": "Prior period", "displayNameKey": "Role_Prior", "kind": "Measure", "requiredTypes": [{ "numeric": true }] }
+  ],
+  "dataViewMappings": [
+    {
+      "conditions": [{ "Lines": { "min": 1, "max": 6 }, "Period": { "max": 1 }, "Actual": { "min": 1, "max": 1 }, "Budget": { "max": 1 }, "Prior": { "max": 1 } }],
+      "matrix": {
+        "rows": { "for": { "in": "Lines" }, "dataReductionAlgorithm": { "window": { "count": 1001 } } },
+        "columns": { "for": { "in": "Period" }, "dataReductionAlgorithm": { "top": { "count": 25 } } },
+        "values": { "select": [{ "bind": { "to": "Actual" } }, { "bind": { "to": "Budget" } }, { "bind": { "to": "Prior" } }] }
+      }
+    }
+  ],
+  "objects": {
+    "statement": {
+      "displayName": "Statement",
+      "displayNameKey": "Card_Statement",
+      "properties": {
+        "lines": { "displayName": "Line metadata JSON", "displayNameKey": "Setting_Lines", "type": { "text": true } },
+        "variances": { "displayName": "Show eligible variances", "displayNameKey": "Setting_Variances", "type": { "bool": true } },
+        "direction": { "displayName": "Right-to-left layout", "displayNameKey": "Setting_Direction", "type": { "bool": true } }
+      }
+    },
+    "subTotals": {
+      "displayName": "Host totals",
+      "displayNameKey": "Card_Totals",
+      "properties": {
+        "rowSubtotals": { "displayName": "Request row subtotals", "type": { "bool": true } },
+        "rowSubtotalsPerLevel": { "displayName": "Row subtotals per level", "type": { "bool": true } },
+        "columnSubtotals": { "displayName": "Request column subtotals", "type": { "bool": true } },
+        "columnSubtotalsPerLevel": { "displayName": "Column subtotals per level", "type": { "bool": true } },
+        "levelSubtotalEnabled": { "displayName": "Enable subtotal", "type": { "bool": true } }
+      }
+    }
+  },
+  "subtotals": {
+    "matrix": {
+      "rowSubtotals": { "propertyIdentifier": { "objectName": "subTotals", "propertyName": "rowSubtotals" }, "defaultValue": true },
+      "rowSubtotalsPerLevel": { "propertyIdentifier": { "objectName": "subTotals", "propertyName": "rowSubtotalsPerLevel" }, "defaultValue": false },
+      "columnSubtotals": { "propertyIdentifier": { "objectName": "subTotals", "propertyName": "columnSubtotals" }, "defaultValue": false },
+      "columnSubtotalsPerLevel": { "propertyIdentifier": { "objectName": "subTotals", "propertyName": "columnSubtotalsPerLevel" }, "defaultValue": false },
+      "levelSubtotalEnabled": { "propertyIdentifier": { "objectName": "subTotals", "propertyName": "levelSubtotalEnabled" }, "defaultValue": true }
+    }
+  },
+  "supportsHighlight": true,
+  "supportsKeyboardFocus": true,
+  "supportsEmptyDataView": true,
+  "supportsMultiVisualSelection": true,
+  "tooltips": { "supportedTypes": { "default": true, "canvas": true }, "roles": ["Actual", "Budget", "Prior"] },
+  "drilldown": { "roles": ["Lines"] },
+  "privileges": []
+}

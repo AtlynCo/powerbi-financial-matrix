@@ -1,0 +1,46 @@
+{
+  "name": "atlyn-financial-matrix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Read-only, model-authoritative financial statement presentation for Power BI.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests scripts samples/check-sources.mjs",
+    "test": "tsx --test tests/model.test.ts",
+    "test:samples": "node samples/check-sources.mjs",
+    "prebuild": "npm run notices",
+    "build": "node scripts/build.mjs",
+    "package": "npm run build && npm run artifact:validate",
+    "artifact:validate": "node scripts/validate-artifact.mjs",
+    "test:browser": "playwright test",
+    "audit:dependencies": "npm audit --omit=dev",
+    "audit:tooling": "npm audit",
+    "audit:certification": "node scripts/certification-audit.mjs",
+    "notices": "node scripts/notices.mjs",
+    "icons": "node scripts/icons.mjs",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run test:samples && npm run package && npm run test:browser && npm run audit:certification && npm run audit:dependencies"
+  },
+  "dependencies": {
+    "powerbi-visuals-api": "5.11.1",
+    "powerbi-visuals-utils-formattingmodel": "7.1.0",
+    "powerbi-visuals-utils-formattingutils": "7.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.10.1",
+    "eslint": "9.39.4",
+    "jszip": "3.10.1",
+    "powerbi-visuals-tools": "7.2.1",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.56.1"
+  },
+  "overrides": {
+    "qs": "6.16.0",
+    "sockjs": { "uuid": "11.1.1" }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

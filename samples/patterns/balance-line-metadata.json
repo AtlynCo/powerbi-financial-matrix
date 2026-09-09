@@ -1,0 +1,12 @@
+[
+  {"id":"bs.cash","label":"Cash","order":10,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.receivables","label":"Receivables","order":20,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.inventory","label":"Inventory","order":30,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.fixed-assets","label":"Fixed assets","order":40,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.assets","label":"Total assets","order":50,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.payables","label":"Payables","order":60,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.debt","label":"Debt","order":70,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.equity","label":"Equity","order":80,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.liabilities-equity","label":"Total liabilities and equity","order":90,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"bs.check","label":"Balance check (expected zero)","order":100,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"none"}
+]
