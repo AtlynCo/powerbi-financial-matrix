@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <rect width="300" height="300" rx="24" fill="#ffffff"/>
+  <rect x="38" y="28" width="224" height="172" rx="12" fill="#193e59"/>
+  <path d="M54 76H246M54 113H246M54 150H246M170 76V183M212 76V183" stroke="#ffffff" stroke-width="3"/>
+  <path d="M59 53H143" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M62 94H127M62 132H117M62 170H143" stroke="#b9d5e6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M181 94H199M223 94H237M181 132H199M223 132H237M181 170H199M223 170H237" stroke="#ffffff" stroke-width="5"/>
+  <text x="150" y="242" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="30" font-weight="650" fill="#193e59">Atlyn</text>
+  <text x="150" y="269" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="18" fill="#536573">Financial Matrix</text>
+</svg>

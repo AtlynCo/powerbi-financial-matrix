@@ -2,17 +2,20 @@
 
 A read-only Power BI custom visual for model-authored financial statements. Version **1.0.0.0** presents actual, budget and prior measures, explicitly configured lines, and opt-in variances. It is a **presentation layer, not an accounting engine**: the semantic model supplies every value, including subtotals, percentages, distinct counts, balances and cash flows.
 
-**Private development repository.** No public release, AppSource submission, certification, IBCS compliance, or licensing approval is implied. See the [publication checklist](docs/PUBLICATION-CHECKLIST.md) for the remaining host and legal gates.
+**Private development repository.** Marketplace preparation is in progress; only the release coordinator performs native-host acceptance and live submission. No public release, certification, IBCS compliance, or licensing approval is implied. See the [publication checklist](docs/PUBLICATION-CHECKLIST.md) for the remaining host and legal gates.
 
 ## Start here
 
 - [Build, package and import](docs/BUILD-AND-IMPORT.md)
 - [Authoring contract, formatting and interactions](docs/AUTHORING.md)
 - [Recreate the offline sample in Power BI Desktop](samples/README.md)
+- [Build the fully bound offline PBIP](docs/PBIP-SAMPLE.md)
 - [Balance-sheet and cash-flow patterns](samples/patterns/README.md)
 - [Host validation and publication checklist](docs/PUBLICATION-CHECKLIST.md)
+- [Release-quality evidence and limitations](docs/RELEASE-QUALITY.md)
+- [Submission dossier](docs/SUBMISSION-DOSSIER.md)
 
-The sample contains **Power Query M, DAX, line-metadata JSON and expected results**, not a PBIX/PBIP. All sample data is synthetic and embedded in the query sources; refresh needs no network, credentials, external connector, or machine-specific path. Building the visual and installing Power BI Desktop are separate prerequisites. Desktop/service validation remains pending; source and mocked-browser validation are not equivalent to it.
+The sample contains **Power Query M, DAX, line-metadata JSON and expected results**. All sample data is synthetic and embedded in the query sources; refresh needs no network, credentials, external connector, or machine-specific path. Building the visual and installing Power BI Desktop are separate prerequisites. Desktop/service validation remains pending; source and mocked-browser validation are not equivalent to it. See the submission dossier for the bound project and the separate native PBIX conversion gate; no PBIX is fabricated.
 
 ## Bind the visual
 
@@ -24,7 +27,7 @@ The sample contains **Power Query M, DAX, line-metadata JSON and expected result
 | **Budget** | Optional numeric measure. |
 | **Prior period** | Optional numeric measure. |
 
-Scenarios are **separate bound measures**, not a scenario grouping. Paste an explicit metadata array into **Format visual → Statement → Line metadata JSON**. Every delivered non-host-subtotal node, including section parents, needs metadata. No accounting meaning is inferred from labels.
+Scenarios are **separate bound measures**, not a scenario grouping. Paste an explicit metadata array into **Format visual → Statement → Line metadata JSON**. The no-field landing page explains these steps and supplies a copyable starter. Use the [JSON Schema](samples/line-metadata.schema.json) for editor assistance; runtime validation additionally checks delivered IDs and sibling orders. Every delivered non-host-subtotal node, including section parents, needs metadata. No accounting meaning is inferred from labels.
 
 ```json
 [
@@ -41,7 +44,7 @@ This short array illustrates the schema, not the complete sample configuration. 
 - Display sign is applied **once** to model values. Favorability refers to the **displayed** delta. Negative displayed expenses therefore normally use `favorable: "higher"`.
 - Absolute variance is displayed actual minus displayed reference. Relative variance divides that delta by the absolute displayed reference; a zero reference yields **N/A**, including zero against zero. Percent-line absolute variance is in **percentage points**, not relative percent.
 - Missing values display `-`; non-finite values display `!`. Neither is replaced with zero. Headings have no displayed numbers. The visual never sums children, ratios, distinct counts or presentation subtotals.
-- A bounded, scrollable DOM table provides a sticky header/first column, keyboard navigation, local expand/collapse, selection, native tooltips/highlights and a host context menu. Collapse affects **already delivered descendants only**, not query expansion.
+- A vertically windowed table provides frozen period/scenario headers and responsive row labels, keyboard navigation, local expand/collapse, selection, native tooltips/highlights and a host context menu. A **256 x 160** viewport is the minimum for a readable grid; smaller tiles show an explicit resize message. Collapse affects **already delivered descendants only**, not query expansion or persisted bookmark hierarchy state.
 - Automatic statement grand totals and period totals are not displayed. Bounds are **1,000 row nodes, 24 periods, 168 value columns and 24,000 displayed row × column cells**. Incomplete/oversized data produces notices; no segment fetching/merging or collapse-based recovery is attempted. Scrolling is not full export.
 - Runtime requests no privileges (`privileges: []`), loads no external JavaScript (`externalJS: []`), and has no network, authentication, licensing check or writeback path. Build-time dependency downloads are separate.
 
@@ -56,6 +59,8 @@ npm run verify
 ```
 
 The browser download is a **build/test-time** prerequisite only. `verify` includes typecheck, lint, unit tests, offline sample-source checks, packaging/artifact validation, packaged-browser tests, certification-oriented static checks and production dependency audit. Tooling audit is available separately as `npm run audit:tooling`. A successful audit is not Microsoft certification or a security guarantee.
+
+`npm run test:evidence` captures three real packaged-browser statement screenshots and raw render/scroll/selection distributions. All gates are local: **no GitHub Actions, GitHub-hosted CI/CD, cloud coding or Codespaces builds**.
 
 `npm run package` builds a real SDK `.pbiviz` and validates its identity/content, writing a SHA-256 sidecar under ignored `dist`. The frozen visual GUID is `AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71`. See [the build guide](docs/BUILD-AND-IMPORT.md) before importing the package; generated artifacts are not committed.
 

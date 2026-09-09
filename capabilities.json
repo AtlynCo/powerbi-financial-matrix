@@ -50,6 +50,7 @@
   "supportsHighlight": true,
   "supportsKeyboardFocus": true,
   "supportsEmptyDataView": true,
+  "supportsLandingPage": true,
   "supportsMultiVisualSelection": true,
   "tooltips": { "supportedTypes": { "default": true, "canvas": true }, "roles": ["Actual", "Budget", "Prior"] },
   "drilldown": { "roles": ["Lines"] },

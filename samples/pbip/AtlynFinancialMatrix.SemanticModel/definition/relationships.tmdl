@@ -1,0 +1,15 @@
+relationship 5b6f9f0a-6d0a-4e0a-9a8e-8f2f9a2a0001
+	fromColumn: Facts.PeriodKey
+	toColumn: Period.PeriodKey
+
+relationship 5b6f9f0a-6d0a-4e0a-9a8e-8f2f9a2a0002
+	fromColumn: Facts.AccountID
+	toColumn: Accounts.AccountID
+
+relationship 5b6f9f0a-6d0a-4e0a-9a8e-8f2f9a2a0003
+	fromColumn: BalanceFact.PeriodKey
+	toColumn: Period.PeriodKey
+
+relationship 5b6f9f0a-6d0a-4e0a-9a8e-8f2f9a2a0004
+	fromColumn: CashFlowFact.PeriodKey
+	toColumn: Period.PeriodKey

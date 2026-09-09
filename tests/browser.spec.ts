@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { fixture, hierarchyFixture, line, node } from "./fixtures";
-import { hostState, mount, update } from "./harness";
+import { hostState, mount, update, assertBrowserClean } from "./harness";
 import { sampleFixture } from "./sampleFixture";
+
+test.afterEach(async ({ page }) => assertBrowserClean(page));
 
 test("real packaged JS formats mixed rows, sign/variance, highlight, modern settings and no network", async ({ page }) => {
     const requests: string[] = [];
@@ -120,7 +122,7 @@ test("invalid, empty, partial and zero-reference data are visible not fabricated
     await expect(page.locator("tbody td")).toHaveCount(0);
     expect((await hostState(page)).events.at(-1)).toBe("failed");
     await update(page, undefined);
-    await expect(page.locator(".afm-status")).toContainText("Bind Line ID");
+    await expect(page.locator(".afm-setup")).toContainText("Bind text Line IDs");
     expect((await hostState(page)).events.at(-1)).toBe("finished");
 });
 

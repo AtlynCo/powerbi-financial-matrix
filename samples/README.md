@@ -1,6 +1,6 @@
 # Offline sample: recreate the report in Desktop
 
-This folder is the **sample model/report source**. It contains inline Power Query M data, DAX measures, visual metadata, expected results and a precise manual assembly recipe. It is **not a PBIX or importable PBIP**, and has **not been executed/validated in Power BI Desktop or the service**. Do not rename any source file to `.pbix`.
+This folder contains inline Power Query M data, DAX measures, visual metadata, expected results and the manual assembly recipe below. A [fully bound PBIP generator](../docs/PBIP-SAMPLE.md) is also available: run `npm run sample:build` after packaging to produce the project with its exact embedded visual. Neither route has been executed/validated in Power BI Desktop or the service here. No genuine PBIX is included; do not rename any source file to `.pbix`.
 
 The sample can be recreated/refreshed without a network connection after Desktop and the built `.pbiviz` are available. There are no external data sources, credentials, parameters, `File.Contents` paths or web queries. Query contents are pasted into Desktop; source-file paths are instructions for the author, not runtime model dependencies.
 
@@ -181,7 +181,7 @@ This reads only checked-in sample files. It checks metadata coverage/schema/orde
 
 ## Limits of this sample
 
-- No fake binary or partially generated PBIP; the report must be assembled and saved in Desktop.
+- The generated PBIP is fully bound and locally schema/TMDL-parser checked; a genuine PBIX still requires Desktop open/refresh/save. No fake binary is supplied.
 - The hierarchy query shape, blank headings and native subtotal delivery remain real-host acceptance items.
 - The synthetic P&L, BS and CF illustrate supported presentation patterns. They are not a reconciled full three-statement accounting model.
 - No ETL connector, account-mapping editor, multi-currency engine, missing-period fill, RLS design, forecast/versioning system or writeback.

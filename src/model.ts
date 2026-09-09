@@ -58,30 +58,60 @@ function record(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function rejectDuplicateProperties(json: string): void {
+    const objects: Set<string>[] = [];
+    for (let index = 0; index < json.length; index++) {
+        const char = json[index];
+        if (char === "{") objects.push(new Set());
+        else if (char === "}") objects.pop();
+        else if (char === '"') {
+            const start = index++;
+            while (index < json.length && json[index] !== '"') {
+                if (json[index] === "\\") index++;
+                index++;
+            }
+            let next = index + 1;
+            while (/\s/.test(json[next] ?? "") && next < json.length) next++;
+            if (json[next] === ":" && objects.length) {
+                const key: string = JSON.parse(json.slice(start, index + 1));
+                const keys = objects[objects.length - 1]!;
+                if (keys.has(key)) throw new ContractError("Error_DuplicateProperty", key.slice(0, 100));
+                keys.add(key);
+            }
+        }
+    }
+}
+
+function assertLine(item: unknown, index: number): asserts item is Line {
+    const context = `[${index + 1}]`;
+    if (!record(item)) throw new ContractError("Error_Metadata", `${context}: object`);
+    const allowed = new Set(["id", "label", "order", "type", "unit", "format", "sign", "favorable", "variance"]);
+    const errors = Object.keys(item).filter(key => !allowed.has(key)).map(key => `unknown ${key.slice(0, 40)}`);
+    if (typeof item.id !== "string" || !item.id.trim() || item.id.length > 100) errors.push("id");
+    if (typeof item.label !== "string" || !item.label.trim() || item.label.length > 200) errors.push("label");
+    if (typeof item.order !== "number" || !Number.isSafeInteger(item.order)) errors.push("order");
+    if (item.type !== "detail" && item.type !== "subtotal" && item.type !== "heading") errors.push("type");
+    if (item.unit !== "currency" && item.unit !== "percent" && item.unit !== "number") errors.push("unit");
+    if (item.format !== undefined && (typeof item.format !== "string" || !item.format || item.format.length > 100)) errors.push("format");
+    if (item.sign !== 1 && item.sign !== -1) errors.push("sign");
+    if (item.favorable !== "higher" && item.favorable !== "lower" && item.favorable !== "neutral") errors.push("favorable");
+    if (item.variance !== "none" && item.variance !== "absolute" && item.variance !== "both") errors.push("variance");
+    if (errors.length) throw new ContractError("Error_Metadata", `${context}${typeof item.id === "string" ? ` ${item.id.slice(0, 100)}` : ""}: ${errors.join(", ")}`);
+}
+
 export function parseLines(json: string): Map<string, Line> {
     if (json.length > LIMITS.config) throw new ContractError("Error_ConfigSize");
     let input: unknown;
     try { input = JSON.parse(json); }
     catch (error) {
-        if (error instanceof SyntaxError) throw new ContractError("Error_Json");
+        if (error instanceof SyntaxError) throw new ContractError("Error_Json", error.message.slice(0, 180));
         throw error;
     }
     if (!Array.isArray(input) || input.length === 0 || input.length > LIMITS.rows) throw new ContractError("Error_ConfigArray");
+    rejectDuplicateProperties(json);
     const result = new Map<string, Line>();
-    const allowed = new Set(["id", "label", "order", "type", "unit", "format", "sign", "favorable", "variance"]);
-    for (const item of input) {
-        if (!record(item) || Object.keys(item).some(key => !allowed.has(key))
-            || typeof item.id !== "string" || !item.id.trim() || item.id.length > 100
-            || typeof item.label !== "string" || !item.label.trim() || item.label.length > 200
-            || typeof item.order !== "number" || !Number.isSafeInteger(item.order)
-            || (item.type !== "detail" && item.type !== "subtotal" && item.type !== "heading")
-            || (item.unit !== "currency" && item.unit !== "percent" && item.unit !== "number")
-            || (item.format !== undefined && (typeof item.format !== "string" || !item.format || item.format.length > 100))
-            || (item.sign !== 1 && item.sign !== -1)
-            || (item.favorable !== "higher" && item.favorable !== "lower" && item.favorable !== "neutral")
-            || (item.variance !== "none" && item.variance !== "absolute" && item.variance !== "both")) {
-            throw new ContractError("Error_Metadata");
-        }
+    for (const [index, item] of input.entries()) {
+        assertLine(item, index);
         if (result.has(item.id)) throw new ContractError("Error_DuplicateMetadata", item.id);
         if ((item.unit === "percent" && item.variance === "both") || (item.type === "heading" && item.variance !== "none")) {
             throw new ContractError("Error_VariancePolicy", item.id);
@@ -98,7 +128,7 @@ function groupValue(node: powerbi.DataViewMatrixNode): powerbi.PrimitiveValue | 
     if (node.levelValues && (node.levelValues.length !== 1 || node.levelValues[0]?.levelSourceIndex !== 0)) {
         throw new ContractError("Error_CompositeGroup");
     }
-    return node.levelValues?.[0]?.value ?? node.value;
+    return node.levelValues ? node.levelValues[0]?.value : node.value;
 }
 
 export function numeric(value: unknown): NumberState {
@@ -134,12 +164,32 @@ export function getCell(row: StatementRow, column: StatementColumn): Cell {
     if (actual.state === "invalid" || display.state === "invalid") return { ...cell, number: { state: "invalid" } };
     if (actual.state !== "number" || display.state !== "number") return { ...cell, number: { state: "missing" } };
     const delta = actual.value - display.value;
+    cell.number = column.kind === "relative"
+        ? display.value === 0 ? { state: "zeroReference" } : numeric(delta / Math.abs(display.value))
+        : numeric(row.line.unit === "percent" ? delta * 100 : delta);
     const favor = row.line.favorable === "lower" ? -delta : delta;
-    cell.favorable = row.line.favorable === "neutral" || delta === 0 ? "neutral" : favor > 0 ? "favorable" : "unfavorable";
-    if (column.kind === "relative") {
-        return { ...cell, number: display.value === 0 ? { state: "zeroReference" } : numeric(delta / Math.abs(display.value)), format: "0.0%;(0.0%);0.0%" };
+    if (cell.number.state === "number") {
+        cell.favorable = row.line.favorable === "neutral" || delta === 0 ? "neutral" : favor > 0 ? "favorable" : "unfavorable";
     }
-    return { ...cell, number: numeric(row.line.unit === "percent" ? delta * 100 : delta), format: row.line.unit === "percent" ? '0.0" pp";(0.0" pp");0.0" pp"' : cell.format };
+    cell.format = column.kind === "relative" ? "0.0%;(0.0%);0.0%"
+        : row.line.unit === "percent" ? '0.0" pp";(0.0" pp");0.0" pp"' : cell.format;
+    return cell;
+}
+
+function suppliedValues(node: powerbi.DataViewMatrixNode, subtotal: powerbi.DataViewMatrixNode | undefined, id: string): StatementRow["values"] {
+    if (!subtotal?.values) return node.values;
+    const values = { ...subtotal.values };
+    for (const [slot, primary] of Object.entries(node.values ?? {})) {
+        const secondary = values[Number(slot)];
+        if (secondary && (numeric(primary.value).state !== numeric(secondary.value).state
+            || (primary.value !== null && primary.value !== undefined && primary.value !== secondary.value && !Object.is(primary.value, secondary.value))
+            || (primary.valueSourceIndex ?? 0) !== (secondary.valueSourceIndex ?? 0)
+            || (primary.highlight !== undefined && secondary.highlight !== undefined && !Object.is(primary.highlight, secondary.highlight)))) {
+            throw new ContractError("Error_Subtotals", id);
+        }
+        values[Number(slot)] = { ...secondary, ...primary };
+    }
+    return values;
 }
 
 export function visibleRows(rows: StatementRow[], collapsed: ReadonlySet<string>): StatementRow[] {
@@ -267,10 +317,7 @@ export function convert(dataView: powerbi.DataView | undefined, lines: Map<strin
             const subtotals = node.children?.filter(child => child.isSubtotal) ?? [];
             if (subtotals.length > 1) throw new ContractError("Error_Subtotals", line.id);
             // A subtotal child represents the host's aggregate for this parent, never a new report line.
-            const values = node.values ?? subtotals[0]?.values;
-            if (node.values && subtotals[0]?.values && JSON.stringify(node.values) !== JSON.stringify(subtotals[0].values)) {
-                throw new ContractError("Error_Subtotals", line.id);
-            }
+            const values = suppliedValues(node, subtotals[0], line.id);
             const nextPath = [...path, node];
             const hasChildren = !!node.children?.some(child => !child.isSubtotal);
             if (node.isCollapsed && !result.issues.some(issue => issue.key === "Status_HostCollapsed")) result.issues.push({ key: "Status_HostCollapsed" });

@@ -1,0 +1,146 @@
+table CashFlowFact
+
+	measure 'Cash Flow Amount' = ```
+		SUM ( 'CashFlowFact'[Amount] )
+		```
+		isHidden
+
+	measure 'Cash Flow Value' = ```
+		VAR RowID =
+		    IF ( ISINSCOPE ( 'CashFlowLines'[LineID] ), SELECTEDVALUE ( 'CashFlowLines'[LineID] ) )
+		VAR FirstPeriod = MIN ( 'Period'[PeriodKey] )
+		VAR ContiguousSelection =
+		    MAX ( 'Period'[PeriodSort] ) - MIN ( 'Period'[PeriodSort] ) + 1
+		        = DISTINCTCOUNT ( 'Period'[PeriodSort] )
+		VAR OpeningCash =
+		    CALCULATE (
+		        [Cash Flow Amount],
+		        REMOVEFILTERS ( 'Period' ),
+		        TREATAS ( { FirstPeriod }, 'Period'[PeriodKey] ),
+		        KEEPFILTERS ( 'CashFlowFact'[Movement] = "Opening" )
+		    )
+		VAR OperatingCash =
+		    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Operating" ) )
+		VAR InvestingCash =
+		    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Investing" ) )
+		VAR FinancingCash =
+		    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Financing" ) )
+		VAR NetCash =
+		    CALCULATE (
+		        [Cash Flow Amount],
+		        KEEPFILTERS ( 'CashFlowFact'[Movement] IN { "Operating", "Investing", "Financing" } )
+		    )
+		VAR ClosingCash =
+		    CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "CASH" ) )
+		RETURN
+		    IF (
+		        ContiguousSelection,
+		        SWITCH (
+		            RowID,
+		            "cf.opening", OpeningCash,
+		            "cf.operating", OperatingCash,
+		            "cf.investing", InvestingCash,
+		            "cf.financing", FinancingCash,
+		            "cf.net", NetCash,
+		            "cf.closing", ClosingCash,
+		            "cf.check", IF ( NOT ISBLANK ( OpeningCash ) && NOT ISBLANK ( NetCash ) && NOT ISBLANK ( ClosingCash ), OpeningCash + NetCash - ClosingCash ),
+		            BLANK ()
+		        )
+		    )
+		```
+		isHidden
+
+	measure 'CF Actual' = ```
+		CALCULATE (
+		    [Cash Flow Value],
+		    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'CashFlowFact'[Scenario] = "Actual",
+		    'BalanceFact'[Scenario] = "Actual"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	measure 'CF Budget' = ```
+		CALCULATE (
+		    [Cash Flow Value],
+		    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'CashFlowFact'[Scenario] = "Budget",
+		    'BalanceFact'[Scenario] = "Budget"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	measure 'CF Prior' = ```
+		CALCULATE (
+		    [Cash Flow Value],
+		    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+		    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+		    'CashFlowFact'[Scenario] = "Prior",
+		    'BalanceFact'[Scenario] = "Prior"
+		)
+		```
+		formatString: #,0.00;(#,0.00);0.00
+
+	column PeriodKey
+		dataType: int64
+		sourceColumn: PeriodKey
+		summarizeBy: none
+		isHidden
+
+	column Movement
+		dataType: string
+		sourceColumn: Movement
+		summarizeBy: none
+		isHidden
+
+	column Scenario
+		dataType: string
+		sourceColumn: Scenario
+		summarizeBy: none
+		isHidden
+
+	column Amount
+		dataType: double
+		sourceColumn: Amount
+		summarizeBy: none
+		isHidden
+
+	partition CashFlowFact = m
+		mode: import
+		source = ```
+			// Query name: CashFlowFact
+			// Opening is a stock; the other rows are already-classified signed cash movements.
+			let
+			    Seed = #table(
+			        type table [
+			            PeriodKey = number,
+			            Movement = text,
+			            Actual = number,
+			            Budget = number,
+			            Prior = number
+			        ],
+			        {
+			            {202501, "Opening", 45000, 46000, 37000},
+			            {202501, "Operating", 12000, 10000, 8000},
+			            {202501, "Investing", -10000, -11000, -7000},
+			            {202501, "Financing", 3000, 3000, 2000},
+			            {202502, "Opening", 50000, 48000, 40000},
+			            {202502, "Operating", 20000, 19000, 10000},
+			            {202502, "Investing", -12000, -11000, -8000},
+			            {202502, "Financing", 4000, 4000, 2000},
+			            {202503, "Opening", 62000, 60000, 44000},
+			            {202503, "Operating", 18000, 17000, 9000},
+			            {202503, "Investing", -11000, -11000, -9000},
+			            {202503, "Financing", 4000, 4000, 2000}
+			        }
+			    ),
+			    Long = Table.Unpivot(Seed, {"Actual", "Budget", "Prior"}, "Scenario", "Amount"),
+			    Typed = Table.TransformColumnTypes(
+			        Long,
+			        {{"PeriodKey", Int64.Type}, {"Scenario", type text}, {"Amount", type number}}
+			    )
+			in
+			    Typed
+			```
