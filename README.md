@@ -1,2 +1,62 @@
-# powerbi-financial-matrix
-Atlyn read-only financial statement matrix custom visual for Power BI
+# ![Atlyn icon](assets/icon.png) Atlyn Financial Matrix
+
+A read-only Power BI custom visual for model-authored financial statements. Version **1.0.0.0** presents actual, budget and prior measures, explicitly configured lines, and opt-in variances. It is a **presentation layer, not an accounting engine**: the semantic model supplies every value, including subtotals, percentages, distinct counts, balances and cash flows.
+
+**Private development repository.** No public release, AppSource submission, certification, IBCS compliance, or licensing approval is implied. See the [publication checklist](docs/PUBLICATION-CHECKLIST.md) for the remaining host and legal gates.
+
+## Start here
+
+- [Build, package and import](docs/BUILD-AND-IMPORT.md)
+- [Authoring contract, formatting and interactions](docs/AUTHORING.md)
+- [Recreate the offline sample in Power BI Desktop](samples/README.md)
+- [Balance-sheet and cash-flow patterns](samples/patterns/README.md)
+- [Host validation and publication checklist](docs/PUBLICATION-CHECKLIST.md)
+
+The sample contains **Power Query M, DAX, line-metadata JSON and expected results**, not a PBIX/PBIP. All sample data is synthetic and embedded in the query sources; refresh needs no network, credentials, external connector, or machine-specific path. Building the visual and installing Power BI Desktop are separate prerequisites. Desktop/service validation remains pending; source and mocked-browser validation are not equivalent to it.
+
+## Bind the visual
+
+| Role | Binding |
+| --- | --- |
+| **Line ID hierarchy** (`Lines`) | One to six text ID columns, outermost first. IDs are stable and globally unique across delivered hierarchy paths. |
+| **Period** | Optional single grouping column. |
+| **Actual** | Required numeric measure. |
+| **Budget** | Optional numeric measure. |
+| **Prior period** | Optional numeric measure. |
+
+Scenarios are **separate bound measures**, not a scenario grouping. Paste an explicit metadata array into **Format visual → Statement → Line metadata JSON**. Every delivered non-host-subtotal node, including section parents, needs metadata. No accounting meaning is inferred from labels.
+
+```json
+[
+  {"id":"pl.revenue","label":"Revenue","order":10,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"higher","variance":"both"},
+  {"id":"pl.materials","label":"Materials","order":20,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":-1,"favorable":"higher","variance":"both"},
+  {"id":"pl.gross-margin","label":"Gross margin","order":30,"type":"detail","unit":"percent","format":"0.0%;(0.0%);0.0%","sign":1,"favorable":"higher","variance":"absolute"}
+]
+```
+
+This short array illustrates the schema, not the complete sample configuration. Use [the sample's full metadata](samples/pnl/line-metadata.json) when following its assembly instructions.
+
+## Financial and interaction boundaries
+
+- Display sign is applied **once** to model values. Favorability refers to the **displayed** delta. Negative displayed expenses therefore normally use `favorable: "higher"`.
+- Absolute variance is displayed actual minus displayed reference. Relative variance divides that delta by the absolute displayed reference; a zero reference yields **N/A**, including zero against zero. Percent-line absolute variance is in **percentage points**, not relative percent.
+- Missing values display `-`; non-finite values display `!`. Neither is replaced with zero. Headings have no displayed numbers. The visual never sums children, ratios, distinct counts or presentation subtotals.
+- A bounded, scrollable DOM table provides a sticky header/first column, keyboard navigation, local expand/collapse, selection, native tooltips/highlights and a host context menu. Collapse affects **already delivered descendants only**, not query expansion.
+- Automatic statement grand totals and period totals are not displayed. Bounds are **1,000 row nodes, 24 periods, 168 value columns and 24,000 displayed row × column cells**. Incomplete/oversized data produces notices; no segment fetching/merging or collapse-based recovery is attempted. Scrolling is not full export.
+- Runtime requests no privileges (`privileges: []`), loads no external JavaScript (`externalJS: []`), and has no network, authentication, licensing check or writeback path. Build-time dependency downloads are separate.
+
+## Development quick start
+
+Use Node.js **22.12 or newer**, npm, and **PowerShell 7 (`pwsh`) on PATH for Windows builds**, from the repository root:
+
+```powershell
+npm ci
+npx playwright install chromium
+npm run verify
+```
+
+The browser download is a **build/test-time** prerequisite only. `verify` includes typecheck, lint, unit tests, offline sample-source checks, packaging/artifact validation, packaged-browser tests, certification-oriented static checks and production dependency audit. Tooling audit is available separately as `npm run audit:tooling`. A successful audit is not Microsoft certification or a security guarantee.
+
+`npm run package` builds a real SDK `.pbiviz` and validates its identity/content, writing a SHA-256 sidecar under ignored `dist`. The frozen visual GUID is `AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71`. See [the build guide](docs/BUILD-AND-IMPORT.md) before importing the package; generated artifacts are not committed.
+
+Third-party dependency notices, including embedded Globalize notices, are maintained in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and embedded in the packaged `ThirdParty_Notices` localization resource. Those notices do not grant a license for this repository's original code. Existing Atlyn author/contact metadata is documented in the [build guide](docs/BUILD-AND-IMPORT.md); it does not establish monitored support or publication approval. Legal ownership, license terms, operational support, privacy obligations and distribution approval must be settled before publication.

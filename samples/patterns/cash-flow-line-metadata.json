@@ -1,0 +1,9 @@
+[
+  {"id":"cf.opening","label":"Opening cash","order":10,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"none"},
+  {"id":"cf.operating","label":"Net cash from operating activities","order":20,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"cf.investing","label":"Net cash used in investing activities","order":30,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"cf.financing","label":"Net cash from financing activities","order":40,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"cf.net","label":"Net change in cash","order":50,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"cf.closing","label":"Closing cash","order":60,"type":"subtotal","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"both"},
+  {"id":"cf.check","label":"Cash bridge check (expected zero)","order":70,"type":"detail","unit":"currency","format":"$#,0;($#,0);$0","sign":1,"favorable":"neutral","variance":"none"}
+]

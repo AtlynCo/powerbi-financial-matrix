@@ -1,0 +1,79 @@
+// Create each measure separately. Use CashFlowFact as the home table.
+// Balance-measures.dax must already be installed.
+
+Cash Flow Amount =
+SUM ( 'CashFlowFact'[Amount] )
+
+
+Cash Flow Value =
+VAR RowID =
+    IF ( ISINSCOPE ( 'CashFlowLines'[LineID] ), SELECTEDVALUE ( 'CashFlowLines'[LineID] ) )
+VAR FirstPeriod = MIN ( 'Period'[PeriodKey] )
+VAR ContiguousSelection =
+    MAX ( 'Period'[PeriodSort] ) - MIN ( 'Period'[PeriodSort] ) + 1
+        = DISTINCTCOUNT ( 'Period'[PeriodSort] )
+VAR OpeningCash =
+    CALCULATE (
+        [Cash Flow Amount],
+        REMOVEFILTERS ( 'Period' ),
+        TREATAS ( { FirstPeriod }, 'Period'[PeriodKey] ),
+        KEEPFILTERS ( 'CashFlowFact'[Movement] = "Opening" )
+    )
+VAR OperatingCash =
+    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Operating" ) )
+VAR InvestingCash =
+    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Investing" ) )
+VAR FinancingCash =
+    CALCULATE ( [Cash Flow Amount], KEEPFILTERS ( 'CashFlowFact'[Movement] = "Financing" ) )
+VAR NetCash =
+    CALCULATE (
+        [Cash Flow Amount],
+        KEEPFILTERS ( 'CashFlowFact'[Movement] IN { "Operating", "Investing", "Financing" } )
+    )
+VAR ClosingCash =
+    CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "CASH" ) )
+RETURN
+    IF (
+        ContiguousSelection,
+        SWITCH (
+            RowID,
+            "cf.opening", OpeningCash,
+            "cf.operating", OperatingCash,
+            "cf.investing", InvestingCash,
+            "cf.financing", FinancingCash,
+            "cf.net", NetCash,
+            "cf.closing", ClosingCash,
+            "cf.check", IF ( NOT ISBLANK ( OpeningCash ) && NOT ISBLANK ( NetCash ) && NOT ISBLANK ( ClosingCash ), OpeningCash + NetCash - ClosingCash ),
+            BLANK ()
+        )
+    )
+
+
+CF Actual =
+CALCULATE (
+    [Cash Flow Value],
+    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'CashFlowFact'[Scenario] = "Actual",
+    'BalanceFact'[Scenario] = "Actual"
+)
+
+
+CF Budget =
+CALCULATE (
+    [Cash Flow Value],
+    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'CashFlowFact'[Scenario] = "Budget",
+    'BalanceFact'[Scenario] = "Budget"
+)
+
+
+CF Prior =
+CALCULATE (
+    [Cash Flow Value],
+    REMOVEFILTERS ( 'CashFlowFact'[Scenario] ),
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'CashFlowFact'[Scenario] = "Prior",
+    'BalanceFact'[Scenario] = "Prior"
+)

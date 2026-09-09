@@ -1,0 +1,77 @@
+// Create each named measure separately using Modeling > New measure.
+// Use Facts as the home table; measure names are referenced globally.
+
+Fact Amount =
+SUM ( 'Facts'[Amount] )
+
+
+Statement Value =
+VAR RowID =
+    SWITCH (
+        TRUE (),
+        ISINSCOPE ( 'StatementLines'[LineID] ), SELECTEDVALUE ( 'StatementLines'[LineID] ),
+        ISINSCOPE ( 'StatementLines'[SectionID] ), SELECTEDVALUE ( 'StatementLines'[SectionID] ),
+        BLANK ()
+    )
+VAR Revenue =
+    CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[StatementClass] = "Revenue" ) )
+VAR CostOfSales =
+    CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[StatementClass] = "CostOfSales" ) )
+VAR OperatingExpenses =
+    CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[StatementClass] = "OperatingExpense" ) )
+VAR GrossProfit = Revenue - CostOfSales
+VAR OperatingProfit = GrossProfit - OperatingExpenses
+VAR ActiveCustomers =
+    CALCULATE (
+        DISTINCTCOUNT ( 'Facts'[CustomerID] ),
+        KEEPFILTERS ( 'Accounts'[StatementClass] = "Revenue" ),
+        KEEPFILTERS ( NOT ISBLANK ( 'Facts'[CustomerID] ) ),
+        KEEPFILTERS ( 'Facts'[Amount] <> 0 )
+    )
+RETURN
+    SWITCH (
+        RowID,
+        "pl.revenue", Revenue,
+        "pl.product-revenue", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "PRODUCT" ) ),
+        "pl.service-revenue", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "SERVICE" ) ),
+        "pl.launch-revenue", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "LAUNCH" ) ),
+        "pl.cost-of-sales", CostOfSales,
+        "pl.materials", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "MATERIALS" ) ),
+        "pl.delivery", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "DELIVERY" ) ),
+        "pl.gross", BLANK (),
+        "pl.gross-profit", IF ( NOT ISBLANK ( Revenue ) && NOT ISBLANK ( CostOfSales ), GrossProfit ),
+        "pl.gross-margin", IF ( NOT ISBLANK ( Revenue ) && NOT ISBLANK ( CostOfSales ), DIVIDE ( GrossProfit, Revenue ) ),
+        "pl.operating-expenses", OperatingExpenses,
+        "pl.payroll", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "PAYROLL" ) ),
+        "pl.occupancy", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "OCCUPANCY" ) ),
+        "pl.marketing", CALCULATE ( [Fact Amount], KEEPFILTERS ( 'Accounts'[AccountID] = "MARKETING" ) ),
+        "pl.results", BLANK (),
+        "pl.operating-profit", IF ( NOT ISBLANK ( Revenue ) && NOT ISBLANK ( CostOfSales ) && NOT ISBLANK ( OperatingExpenses ), OperatingProfit ),
+        "pl.operating-margin", IF ( NOT ISBLANK ( Revenue ) && NOT ISBLANK ( CostOfSales ) && NOT ISBLANK ( OperatingExpenses ), DIVIDE ( OperatingProfit, Revenue ) ),
+        "pl.customers", ActiveCustomers,
+        BLANK ()
+    )
+
+
+Actual =
+CALCULATE (
+    [Statement Value],
+    REMOVEFILTERS ( 'Facts'[Scenario] ),
+    'Facts'[Scenario] = "Actual"
+)
+
+
+Budget =
+CALCULATE (
+    [Statement Value],
+    REMOVEFILTERS ( 'Facts'[Scenario] ),
+    'Facts'[Scenario] = "Budget"
+)
+
+
+Prior =
+CALCULATE (
+    [Statement Value],
+    REMOVEFILTERS ( 'Facts'[Scenario] ),
+    'Facts'[Scenario] = "Prior"
+)

@@ -1,0 +1,38 @@
+// Optional: paste this query (not a measure) into Desktop's DAX query view.
+// Raw model values: expenses are positive, margins are fractions.
+EVALUATE
+SUMMARIZECOLUMNS (
+    'StatementLines'[SectionID],
+    'StatementLines'[LineID],
+    'Period'[PeriodKey],
+    "Actual", [Actual],
+    "Budget", [Budget],
+    "Prior", [Prior]
+)
+ORDER BY
+    'Period'[PeriodKey], 'StatementLines'[SectionID], 'StatementLines'[LineID]
+
+// Parent scope only. The two all-BLANK headings are intentionally omitted
+// by SUMMARIZECOLUMNS; the numeric parent totals must still be correct.
+EVALUATE
+SUMMARIZECOLUMNS (
+    'StatementLines'[SectionID],
+    'Period'[PeriodKey],
+    "Actual", [Actual],
+    "Budget", [Budget],
+    "Prior", [Prior]
+)
+ORDER BY
+    'Period'[PeriodKey], 'StatementLines'[SectionID]
+
+// No Period grouping: model evaluation over all selected months.
+// Active customers must be 4, not the sum of monthly counts (9).
+EVALUATE
+SUMMARIZECOLUMNS (
+    'StatementLines'[LineID],
+    "Actual", [Actual],
+    "Budget", [Budget],
+    "Prior", [Prior]
+)
+ORDER BY
+    'StatementLines'[LineID]

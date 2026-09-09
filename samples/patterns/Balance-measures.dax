@@ -1,0 +1,68 @@
+// Create each measure separately. Use BalanceFact as the home table.
+
+Balance Amount =
+SUM ( 'BalanceFact'[Amount] )
+
+
+Balance at Period End =
+VAR LastPeriod = MAX ( 'Period'[PeriodKey] )
+RETURN
+    CALCULATE (
+        [Balance Amount],
+        REMOVEFILTERS ( 'Period' ),
+        TREATAS ( { LastPeriod }, 'Period'[PeriodKey] )
+    )
+
+
+Balance Sheet Value =
+VAR RowID =
+    IF ( ISINSCOPE ( 'BalanceLines'[LineID] ), SELECTEDVALUE ( 'BalanceLines'[LineID] ) )
+VAR Assets =
+    CALCULATE (
+        [Balance at Period End],
+        KEEPFILTERS ( 'BalanceFact'[AccountID] IN { "CASH", "RECEIVABLE", "INVENTORY", "FIXED_ASSETS" } )
+    )
+VAR LiabilitiesAndEquity =
+    CALCULATE (
+        [Balance at Period End],
+        KEEPFILTERS ( 'BalanceFact'[AccountID] IN { "PAYABLE", "DEBT", "EQUITY" } )
+    )
+RETURN
+    SWITCH (
+        RowID,
+        "bs.cash", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "CASH" ) ),
+        "bs.receivables", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "RECEIVABLE" ) ),
+        "bs.inventory", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "INVENTORY" ) ),
+        "bs.fixed-assets", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "FIXED_ASSETS" ) ),
+        "bs.assets", Assets,
+        "bs.payables", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "PAYABLE" ) ),
+        "bs.debt", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "DEBT" ) ),
+        "bs.equity", CALCULATE ( [Balance at Period End], KEEPFILTERS ( 'BalanceFact'[AccountID] = "EQUITY" ) ),
+        "bs.liabilities-equity", LiabilitiesAndEquity,
+        "bs.check", IF ( NOT ISBLANK ( Assets ) && NOT ISBLANK ( LiabilitiesAndEquity ), Assets - LiabilitiesAndEquity ),
+        BLANK ()
+    )
+
+
+BS Actual =
+CALCULATE (
+    [Balance Sheet Value],
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'BalanceFact'[Scenario] = "Actual"
+)
+
+
+BS Budget =
+CALCULATE (
+    [Balance Sheet Value],
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'BalanceFact'[Scenario] = "Budget"
+)
+
+
+BS Prior =
+CALCULATE (
+    [Balance Sheet Value],
+    REMOVEFILTERS ( 'BalanceFact'[Scenario] ),
+    'BalanceFact'[Scenario] = "Prior"
+)

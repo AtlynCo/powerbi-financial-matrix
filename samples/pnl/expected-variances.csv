@@ -1,0 +1,9 @@
+PeriodKey,LineID,Reference,DisplayActual,DisplayReference,AbsoluteVariance,RelativeVariance,AbsoluteUnit,Favorability
+202501,pl.revenue,Budget,126200,120000,6200,0.051666666666666666,currency,favorable
+202501,pl.materials,Budget,-45000,-42000,-3000,-0.07142857142857142,currency,unfavorable
+202501,pl.launch-revenue,Budget,1200,0,1200,N/A,currency,favorable
+202501,pl.launch-revenue,Prior,1200,,,,currency,missing
+202501,pl.gross-margin,Budget,0.5641838351822503,0.5583333333333333,0.5850501848917005,,percentage-points,favorable
+202501,pl.operating-margin,Budget,0.24722662440570523,0.225,2.2226624405705224,,percentage-points,favorable
+202503,pl.delivery,Budget,-12000,-12000,0,0,currency,neutral
+202501,pl.customers,Budget,3,3,0,,number,neutral
