@@ -17,6 +17,7 @@ import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { readArtifact } from "./artifact.mjs";
+import { sampleStructureIssues } from "./sample-structure.mjs";
 
 const REPO_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SAMPLES = path.join(REPO_ROOT, "samples");
@@ -61,6 +62,9 @@ function walk(dir, out = []) {
   }
   return out;
 }
+
+const sourceStructureIssues = sampleStructureIssues(PBIP);
+assertCheck("source-required-files", sourceStructureIssues.length === 0, sourceStructureIssues.join("; ") || "Required project/PBIR/TMDL entry files are present");
 
 // ---------------------------------------------------------------------------
 // 1. JSON Schema conformance (Ajv, draft-07, all schemas cached locally offline)
@@ -560,6 +564,8 @@ if (!existsSync(buildSummaryPath)) {
   );
 } else {
   const summary = readJson(buildSummaryPath);
+  const generatedStructureIssues = sampleStructureIssues(summary.outDir);
+  assertCheck("generated-required-files", generatedStructureIssues.length === 0, generatedStructureIssues.join("; ") || "Generated project has all required entry files");
   const artifact = await readArtifact();
   assertCheck("resource-current-artifact", summary.embeddedResource?.sha256 === artifact.sha256, "Build record matches the current official package");
   assertCheck("resource-pbir-manifest", readText(summary.embeddedResource.manifestPath) === artifact.manifestText, "Unmodified official manifest in CustomVisuals");

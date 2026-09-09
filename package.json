@@ -19,7 +19,7 @@
     "release:local": "node scripts/release-local.mjs",
     "dossier": "node scripts/dossier.mjs",
     "sample:build": "node scripts/build-sample.mjs",
-    "sample:validate": "node scripts/validate-sample.mjs && node scripts/validate-tmdl.mjs",
+    "sample:validate": "node --test tests/sample-structure.test.mjs && node scripts/validate-sample.mjs && node scripts/validate-tmdl.mjs",
     "audit:dependencies": "npm audit --omit=dev",
     "audit:tooling": "npm audit",
     "audit:certification": "node scripts/certification-audit.mjs",

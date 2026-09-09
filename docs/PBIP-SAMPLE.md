@@ -33,13 +33,21 @@ dist\sample-report\
     definition\database.tmdl, model.tmdl, relationships.tmdl, tables\*.tmdl
   AtlynFinancialMatrix.Report\
     definition.pbir, .platform
-    definition\report.json, pages\...
+    definition\version.json, report.json, pages\...
     CustomVisuals\<GUID>\
       package.json
       resources\<GUID>.pbiviz.json
 ```
 
 The source-only schema cache is under `samples\pbip\schema`, with Microsoft's original MIT license. It is omitted from the generated report. `dist\sample-report-build.json`, `dist\sample-validation.json` and `dist\tmdl-validation.json` record the exact local results.
+
+## Native preflight correction: required version metadata
+
+The coordinator's unmodified sealed sample failed to open in Desktop 2.157.1354.0 with **Cannot find file 'version.json'**. The original checker validated files that existed, but did not require this PBIR entry file. The quality-branch sample now includes `AtlynFinancialMatrix.Report\definition\version.json`, using Microsoft's [versionMetadata schema](https://developer.microsoft.com/json-schemas/fabric/item/report/definition/versionMetadata/1.0.0/schema.json) and report-definition version `2.0.0`, as also present in a [concrete PBIR version file](https://github.com/ProdataSQL/FinancialModelling/blob/ec738ceb6a801f416b88b93c1dcfddbbe89426b7/Workspace/Finance-GL.Report/definition/version.json).
+
+This is the **report format version**, not the unchanged visual package version `1.0.0.0`. Preflight now checks required entry files in both source and generated projects, plus listed page definitions. Regression cases cover missing/version-as-directory metadata and substituting a visual version. A distinct provisional sample is supplied for coordinator retry using identical PBIVIZ bytes; the sealed dossier and certification ref are not changed. A successful local preflight is still not evidence of a successful native open/refresh/render.
+
+For this sample-only retry, **skip `npm run package`** and use the existing sealed package with `npm run sample:build` and `npm run sample:validate`. Rebuilding the official ZIP can change its hash even when runtime source is unchanged.
 
 ## Model and pages
 
