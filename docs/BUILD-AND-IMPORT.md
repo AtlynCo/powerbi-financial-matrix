@@ -116,6 +116,8 @@ Get-Content .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.0.0.
 
 Compare the digest values, not merely the filenames. Hashing establishes artifact identity, not Microsoft approval or legal permission to distribute. `assets\icon.png` is the original 20 × 20 visual icon. Full production dependency licenses and embedded Globalize copyright notices are preserved in the packaged `ThirdParty_Notices` localization resource; validation compares that text with `THIRD-PARTY-NOTICES.txt`. This avoids depending on a webpack license sidecar that the SDK archive may omit. Dependency notices are separate from the repository's original-code licensing decision.
 
+The owner-approved model is existing Atlyn storefront subscriptions with an **ungated runtime and free shared viewing**, not paid-author enforcement. No activation, keys, licensing service or runtime requests are required. See [the current source-term statement](../README.md#storefront-acquisition-runtime-and-source-terms): the repository has no first-party license file or package license identifier, and this decision does not add one. Documentation-only clarification does not require rebuilding the sealed `1.0.0.0` package or changing its version; retain the exact bytes and original source provenance.
+
 ## Import into Power BI Desktop
 
 For the prepared sample, first follow [PBIP sample](PBIP-SAMPLE.md): generate and open `dist\sample-report\AtlynFinancialMatrix.pbip`. Tables, relationships, visuals and fields are already bound. Refresh/compare/save as PBIX in Desktop; do not substitute a renamed file. The manual steps below remain useful for adding the visual to another report or studying the canonical source recipe.

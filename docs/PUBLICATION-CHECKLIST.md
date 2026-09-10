@@ -2,6 +2,12 @@
 
 This is a **gate list, not a declaration that checks have passed**. Marketplace preparation is authorized; the repository remains private and only the release coordinator owns native acceptance/live submission. Record actual evidence, artifact digest, date, Desktop/service build and tenant for each applicable check.
 
+## Approved acquisition and certification goal
+
+**Owner-approved on 2026-09-10:** existing Atlyn storefront subscriptions with an ungated visual runtime and free shared report viewing, without an additional Atlyn viewer charge or activation step. The visual does not enforce paid-author entitlements. No keys, signer, Microsoft Entra ID/AAD, licensing API, feature gates or runtime requests are to be added. Power BI licensing and access/tenant policies remain applicable. Runtime licensing integration is not an outstanding gate.
+
+The **additional Power BI certification badge is required**, but is not yet awarded. Native sample/genuine PBIX work and final assets remain coordinator-owned. Further merges, certification-ref changes and submission stay on hold until the coordinator's final gate. Documentation updates do not require a package rebuild/version bump or changes to the frozen dossier.
+
 ## What each kind of evidence proves
 
 | Evidence | Establishes | Does not establish |
@@ -37,10 +43,11 @@ Release-quality validation is local only. The former GitHub workflow has been re
 - [ ] Confirm `eslint-plugin-powerbi-visuals` is installed, recommended runtime-source rules are active, and `npm run eslint` uses Microsoft's documented script.
 - [ ] Record exact `.pbiviz` SHA-256; validate frozen GUID and `1.0.0.0` version.
 - [ ] Review the finalized build wrapper's worktree-isolated development-certificate generation and cleanup; no user trust-store installation or cross-checkout secret reuse.
-- [ ] Confirm runtime `privileges: []`, `externalJS: []`, no runtime network/auth/license/writeback, and no embedded credentials.
+- [ ] Confirm the intended ungated runtime: `privileges: []`, `externalJS: []`, no runtime network/auth/entitlement checks/writeback, and no embedded credentials.
 - [ ] Review generated third-party notices for runtime bundled dependencies.
 - [ ] Confirm original 20 × 20 icon, attribution and rights; no borrowed branding.
 - [ ] Confirm original 300 x 300 listing logo and 1-5 rendered screenshots, each 1366 x 768 PNG at most 1024KB; preserve exact hashes and provenance.
+- [ ] Receive coordinator-approved final assets; do not fabricate or apply a Power BI certification badge before Microsoft's approval.
 - [ ] Confirm lowercase `certification` source matches the final candidate commit/package and approved Microsoft review access is ready; do not overwrite another owner's ref.
 - [ ] Verify generated artifacts remain ignored and the repository remains private.
 
@@ -89,13 +96,14 @@ Use a destination with the bound fields StatementLines[LineID] and Period[Period
 
 Configured package metadata is **Atlyn <atlyn.help@gmail.com>**, with support URL **https://www.atlynco.com/docs/faq**. The coordinator supplied these existing shared Atlyn details and confirmed the FAQ content. This establishes metadata provenance, not monitored support, responsiveness, a service commitment or approval to publish this visual.
 
-- [ ] Legal owner selects/approves original-code license terms. No license is inferred from repository visibility or third-party notices.
+- [ ] Record existing first-party terms accurately: no first-party LICENSE/LICENCE/COPYING file or `package.json` license identifier is currently present. Preserve that state; only the legal owner may supply new approved terms. No source license is inferred from storefront approval, repository visibility or third-party notices.
 - [ ] Legal approves third-party licensing/attribution and any proposed end-user terms.
 - [ ] Verify ownership, mailbox monitoring, support responsiveness and the FAQ's suitability for Financial Matrix; record evidence and the responsible support owner.
 - [ ] Legal/organization approves applicable privacy contacts, privacy statements and support obligations; do not infer these from the configured author email or FAQ.
 - [ ] Product/security/tenant owners approve intended internal distribution and operational support.
+- [ ] Coordinator finalizes storefront acquisition links, prices and listing fields for the approved subscription/ungated-runtime model, without claiming paid-author enforcement or Atlyn viewer activation.
 - [ ] Coordinator obtains explicit external-distribution/legal approval before live submission. This coding session does not publish, submit, change privacy or create a public release.
-- [ ] If certification or standards claims are later desired, complete their actual review process before making those claims.
+- [ ] Obtain the owner-required additional Power BI certification through Microsoft's actual review before displaying its badge or claiming certification. Do not imply IBCS or other standards approval.
 
 ## Evidence record template
 
