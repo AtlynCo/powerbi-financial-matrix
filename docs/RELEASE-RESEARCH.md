@@ -4,6 +4,8 @@
 
 No GitHub Actions/hosted CI, cloud build, or shared Desktop/browser UI was used to produce this research. All fetches below were made with local, read-only web browsing. Where a fetch failed, that failure is recorded verbatim rather than filled in with an assumption.
 
+**Owner decision update, 2026-09-10 (not a new Microsoft policy finding):** existing Atlyn storefront subscriptions with an ungated runtime and free shared viewing are approved. No paid-author enforcement or runtime licensing integration is pending. Although Microsoft's certification program is optional in general, the additional Power BI certification badge is required for this release by the owner; it has not been awarded. Current native, final-asset, legal/listing and submission gates are in the dossier/checklist. No first-party license file or package license identifier has been added or changed.
+
 ---
 
 ## 1. Microsoft primary sources: certification and AppSource submission
@@ -50,7 +52,7 @@ Source: [Package a Power BI visual](https://learn.microsoft.com/en-us/power-bi/d
 
 **Repository fact-check (not a certification claim):** `assets/icon.png` in this repository measures **20×20 px**, and `assets/logo.png` measures **300×300 px** (verified locally with .NET `System.Drawing.Image` on 2026-09-09). There is no `.pbix` file anywhere in this repository (`glob **/*.pbix` returned no matches on 2026-09-09); the README and `docs/PUBLICATION-CHECKLIST.md` already state that a `.pbix`/`.pbip` sample is a separate, currently unmet gate, and another agent owns that offline PBIP track — this document does not change that ownership.
 
-### 1.4 Commercial-logo and IAP guidelines (only relevant if a paid tier is ever added)
+### 1.4 Commercial-logo and IAP guidelines (policy context, not a runtime enforcement requirement)
 
 Source: [Guidelines for publishing Power BI custom visuals](https://learn.microsoft.com/en-us/power-bi/developer/visuals/guidelines-powerbi-visuals) (`ms.date: 2025-12-15`).
 
@@ -165,7 +167,7 @@ These are differences in scope, not defects — the README explicitly frames the
 - **No in-visual chart/table toggle or embedded inline charts** — Zebra BI's page advertises "tables with embedded charts" and a chart/table toggle slider; this visual is DOM-table-only.
 - **No forecasting/what-if/multi-plan comparison authoring surface** — both competitors advertise forecast/what-if/scenario-switch features; this visual's three scenario slots (Actual/Budget/Prior) are fixed, separately bound measures with no in-visual scenario editor (`README.md`, "Bind the visual": "Scenarios are separate bound measures, not a scenario grouping").
 - **No IBCS-compliance claim** — Zebra BI's own page claims first/only IBCS-certified status (vendor claim, not verified here); this repository's README explicitly disclaims any "IBCS compliance" implication at the top of the file.
-- **No licensing/commercial model at all** — Inforiver's AppSource install flow requires entering a license key in-visual; this repository has no license gate, license server, or IAP path of any kind (`capabilities.json` requests no privileges and `pbiviz.json` declares no dependencies), consistent with §1.5's Marketplace requirement that the base visual be free, but this repository is not currently configured for any paid tier either.
+- **No runtime entitlement enforcement** — Inforiver's AppSource install flow requires entering a license key in-visual; this repository has no license gate, license server, or in-visual purchase/activation path (`capabilities.json` requests no privileges). The owner's 2026-09-10 decision explicitly uses external Atlyn storefront subscriptions with an ungated runtime and free shared viewing. Absence of runtime checks does not mean absence of a commercial acquisition model or first-party distribution obligations.
 
 ### 4.3 Concrete, currently-open certification/AppSource submission gaps found by this research
 

@@ -2,7 +2,7 @@
 
 A read-only Power BI custom visual for model-authored financial statements. Version **1.0.0.0** presents actual, budget and prior measures, explicitly configured lines, and opt-in variances. It is a **presentation layer, not an accounting engine**: the semantic model supplies every value, including subtotals, percentages, distinct counts, balances and cash flows.
 
-**Private development repository.** Marketplace preparation is in progress; only the release coordinator performs native-host acceptance and live submission. No public release, certification, IBCS compliance, or licensing approval is implied. See the [publication checklist](docs/PUBLICATION-CHECKLIST.md) for the remaining host and legal gates.
+**Private development repository.** Marketplace preparation is in progress; only the release coordinator performs native-host acceptance and live submission. The owner-approved commercial model is **existing Atlyn storefront subscriptions with an ungated visual runtime**. No public release, certification, IBCS compliance, or new source-code license is implied. See the [publication checklist](docs/PUBLICATION-CHECKLIST.md) for the remaining host and legal gates.
 
 ## Start here
 
@@ -47,6 +47,16 @@ This short array illustrates the schema, not the complete sample configuration. 
 - A vertically windowed table provides frozen period/scenario headers and responsive row labels, keyboard navigation, local expand/collapse, selection, native tooltips/highlights and a host context menu. A **256 x 160** viewport is the minimum for a readable grid; smaller tiles show an explicit resize message. Collapse affects **already delivered descendants only**, not query expansion or persisted bookmark hierarchy state.
 - Automatic statement grand totals and period totals are not displayed. Bounds are **1,000 row nodes, 24 periods, 168 value columns and 24,000 displayed row × column cells**. Incomplete/oversized data produces notices; no segment fetching/merging or collapse-based recovery is attempted. Scrolling is not full export.
 - Runtime requests no privileges (`privileges: []`), loads no external JavaScript (`externalJS: []`), and has no network, authentication, licensing check or writeback path. Build-time dependency downloads are separate.
+
+## Storefront acquisition, runtime and source terms
+
+**Owner decision, 2026-09-10:** acquisition uses existing Atlyn storefront subscriptions; the installed visual intentionally has no runtime entitlement enforcement. Shared report viewing is free of an additional Atlyn viewer charge or activation step. The visual does not verify a paid author either: no license keys, signer, Microsoft Entra ID/AAD sign-in, licensing API, feature gates or runtime requests are to be added. Power BI's own licensing, report permissions and tenant policies still apply.
+
+Runtime licensing integration is **not a release blocker**. The additional **Power BI certification badge is a required release goal**, not an awarded status or a badge to fabricate. The coordinator owns the genuine PBIX/native acceptance, final assets, legal/listing fields and Microsoft submission. Further merges, certification-ref updates and submission remain on coordinator hold.
+
+**Existing first-party license status:** no first-party `LICENSE`, `LICENCE` or `COPYING` file is present, and `package.json` declares no `license` identifier. No first-party license terms are introduced or changed here; storefront approval does not itself supply source-code redistribution terms. Third-party dependency notices and Microsoft's source-schema MIT license apply only to their respective materials. Legal approval of distribution rights and listing terms remains separate from the approved ungated-runtime architecture.
+
+This documentation-only decision does not require repackaging or a version bump. Preserve the sealed `1.0.0.0` package and frozen dossier; coordinate any later package-content change separately.
 
 ## Development quick start
 

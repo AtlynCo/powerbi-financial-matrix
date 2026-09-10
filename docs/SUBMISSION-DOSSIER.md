@@ -2,6 +2,16 @@
 
 **Status: private technical candidate, not submitted or certified.** The release coordinator owns real Desktop/service acceptance, Partner Center access, publication and legal/product decisions. This repository performs local preparation and source delivery only. No GitHub Actions or other GitHub-hosted CI/CD, cloud coding, Codespaces build, public release or privacy change is authorized here.
 
+## Approved commercial model and remaining hold
+
+On **2026-09-10**, the owner approved **existing Atlyn storefront subscriptions with an ungated visual runtime**. Acquisition is external; shared report viewing is free of an additional Atlyn viewer charge or activation step. The visual does not enforce paid-author entitlements. No license keys, signer, Microsoft Entra ID/AAD, licensing API, feature gates or runtime requests are required or authorized. Power BI licensing, permissions and tenant policies still apply. **Runtime licensing integration is no longer a blocker**; the existing offline renderer is intentional, not a temporary unlicensed preview awaiting enforcement.
+
+The additional **Power BI certification badge is required**, subject to Microsoft's actual review and approval. It is not currently awarded and must not be fabricated or presented as earned. The coordinator is handling native samples/genuine PBIX and will supply final assets; further merges, certification-ref changes and live submission stay on hold until the coordinator's final gate.
+
+The current repository has **no first-party LICENSE/LICENCE/COPYING file and no `package.json` license identifier**. This update preserves that state and all third-party terms; it does not invent a license, EULA, price or legal approval. See [the README's source-term statement](../README.md#storefront-acquisition-runtime-and-source-terms). Legal/listing approvals remain distinct from the resolved commercial architecture.
+
+No runtime or package content changes are needed for this decision: retain version `1.0.0.0` and the exact sealed PBIVIZ. Do not rerun the packaging/dossier commands below solely for documentation updates, modify frozen folders or move `certification` to a documentation-only commit. Preserve the package's original source provenance; the coordinator reconciles final submission source/assets after native acceptance.
+
 ## Immutable delivery
 
 The final dossier manifest records the exact source commit, official `.pbiviz` SHA-256, full source ZIP, bound offline PBIP, original assets, screenshots, raw performance observations and command logs. Preserve the complete generated dossier in the coordinator's approved durable location. Hashes identify bytes, not Microsoft approval.
@@ -49,13 +59,15 @@ See [release-quality methodology](RELEASE-QUALITY.md) for sample counts, p50/p95
 
 **Description:** Present model-authored profit-and-loss statements with Actual, Budget and Prior measures in a structured financial table. Configure stable line IDs, captions, sibling order, row types, numeric formats, signs and favorable direction explicitly. Currency, ordinary numbers, model-defined margins and distinct counts can coexist without summing statement rows.
 
+**Acquisition and viewing:** acquired through existing Atlyn storefront subscriptions. The installed visual is ungated, with no in-visual activation or paid-author checks and no additional Atlyn charge for shared report viewing. Power BI licensing and report-access requirements still apply. Exact storefront links, prices and listing fields are finalized by the coordinator.
+
 Eligible lines can show absolute and relative scenario differences. Margin differences are percentage points; zero-reference relative comparisons are N/A, and missing/invalid values remain distinct from zero. Named statement subtotals and matrix-provided totals remain authoritative model results. Included synthetic sources also demonstrate balance-sheet snapshots and a cash-flow bridge using the same presentation contract.
 
 Frozen row/period headers, vertical row windowing, local expand/collapse, keyboard navigation, high-contrast/RTL presentation and native host identity APIs support report interaction. Local collapse affects delivered descendants only. Power BI controls native selection, tooltip and context-menu/drillthrough behavior.
 
 **Disclosed limitations:** read-only; not an accounting, planning or spreadsheet engine. No formula language, DAX/JavaScript evaluation, writeback, forecasts, approvals or licensing service. Maximum 1,000 bounded row nodes, 24 periods, 168 value columns and 24,000 row x value-column cells; partial data is disclosed. Minimum readable grid 256 x 160. Columns are not horizontally virtualized; maximum-width statements are slower than typical views. Export may capture only the current viewport, not a complete paginated statement. All calculations/account mappings/currency conversion belong in the semantic model. Native-host acceptance is required before this candidate copy becomes a publication claim.
 
-**Categories/industries:** coordinator chooses from current Partner Center lists; no category, pricing, IAP tier, licensing promise or commercial approval is invented here. Do not include competitor names, logos, comparative tags or superiority/certification claims in the listing. The [primary-source comparison](RELEASE-RESEARCH.md) is private research, not listing copy.
+**Categories/industries:** coordinator chooses from current Partner Center lists. The storefront/ungated-runtime model above is owner-approved; no specific price, IAP tier or legal term is invented here. Do not include competitor names, logos, comparative tags or superiority/certification claims in the listing. The [primary-source comparison](RELEASE-RESEARCH.md) is private research, not listing copy.
 
 ## Screenshot inventory and provenance
 
@@ -79,10 +91,11 @@ Primary requirements were read on 2026-09-09: [publishing assets](https://learn.
 | Microsoft sample test data | Coordinator: exercise the [official sample report](https://github.com/PowerBi-Projects/PowerBI-visuals/tree/gh-pages/assets) in the real host as required by certification guidance; synthetic fixtures do not replace that host gate. |
 | Accessibility and native exports | Coordinator: real screen readers/zoom, PDF/PowerPoint/print/subscription/export behavior; viewport limitations must remain explicit. No full-statement pagination claim. |
 | Private certification repository access | Coordinator: approved Microsoft validation-team read access, account/2FA/recovery requirements, exact frozen lowercase branch and submitted package match. Never place credentials in source/dossier. |
-| Original-code license and distribution rights | Legal owner: select/approve terms. Third-party notices do not license Atlyn's original code or authorize public distribution. |
+| Required Power BI certification badge | Coordinator: request the additional certification and obtain Microsoft's actual approval before displaying the badge or claiming certification. It is an owner-required outcome, not a completed gate. |
+| Original-code license and distribution rights | No first-party LICENSE/LICENCE/COPYING file or package license identifier currently exists; preserve this state unless the legal owner explicitly supplies approved terms. Third-party notices do not license Atlyn's original code or authorize public distribution. |
 | EULA / contract | Legal owner: choose the applicable Microsoft standard contract or approved EULA/URL; do not silently accept a contract during preparation. |
 | Privacy policy HTTPS URL | Legal/privacy owner: approved public policy and contact, separate from support FAQ. No runtime network does not waive the listing requirement. |
-| Pricing / IAP / business model | Product/legal owner: approve free base visual / any permitted IAP policy. Current code has no purchase, activation or licensing path. |
+| Storefront / listing configuration | Business model approved: existing Atlyn storefront subscriptions, ungated runtime and free shared viewing without Atlyn activation. Coordinator/legal owner finalize exact acquisition links, prices, terms and Marketplace fields; no paid-author enforcement integration is pending. |
 | Support operations | Support owner: approve Financial Matrix support documentation, monitoring/responsiveness and ownership. Existing metadata is `Atlyn <atlyn.help@gmail.com>` and `https://www.atlynco.com/docs/faq`; metadata is not proof of operations. |
 | Listing/assets and final submission | Coordinator: approve copy, categories, screenshots, rights, preview audiences and all required Partner Center fields; upload actual immutable files and request certification. This session does not manipulate shared UI or submit. |
 
