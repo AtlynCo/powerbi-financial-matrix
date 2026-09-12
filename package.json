@@ -25,7 +25,8 @@
     "audit:certification": "node scripts/certification-audit.mjs",
     "notices": "node scripts/notices.mjs",
     "icons": "node scripts/icons.mjs",
-    "verify": "npm run typecheck && npm run lint && npm test && npm run test:samples && npm run package && npm run test:browser && npm run audit:certification && npm run audit:dependencies"
+    "verify": "npm run typecheck && npm run lint && npm test && npm run test:samples && npm run package && npm run test:browser && npm run audit:certification && npm run audit:dependencies",
+    "postinstall": "node scripts/patch-loader.mjs"
   },
   "dependencies": {
     "powerbi-visuals-api": "5.11.1",
