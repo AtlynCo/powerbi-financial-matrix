@@ -6,7 +6,7 @@ const artifact = await readArtifact();
 const { resource, manifest } = artifact;
 const config = JSON.parse(readFileSync("pbiviz.json", "utf8"));
 assert.equal(resource.visual.guid, "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71");
-assert.equal(resource.visual.version, "1.0.0.0");
+assert.equal(resource.visual.version, "1.0.1.0");
 assert.deepEqual(resource.visual, config.visual);
 assert.deepEqual(manifest.visual, resource.visual);
 assert.equal(resource.apiVersion, "5.11.0");

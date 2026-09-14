@@ -72,6 +72,11 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
         this.selection.registerOnSelectCallback(ids => {
             if (!this.disposed) { this.setSelectionIds(ids); this.applySelection(); }
         });
+        this.root.addEventListener("contextmenu", event => {
+            event.preventDefault();
+            if (this.host.hostCapabilities.allowInteractions === false) return;
+            this.selection.showContextMenu({}, { x: event.clientX, y: event.clientY });
+        });
         this.scroll.addEventListener("scroll", () => {
             this.hideTooltip();
             if (this.mode !== "grid") return;
@@ -118,6 +123,15 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
             this.identityCache.clear();
             this.formatCache.clear();
             this.hideTooltip();
+            const hasLines = Boolean(dataView?.matrix?.rows?.root?.children?.length && dataView?.matrix?.rows?.levels?.some(l => l.sources?.some(s => s.roles?.Lines)));
+            const hasActual = Boolean(dataView?.matrix?.valueSources?.some(s => s.roles?.Actual));
+            if (!hasLines || !hasActual) {
+                this.statement = { rows: [], columns: [], issues: [], partial: false, hasHighlights: false };
+                this.displayRows = [];
+                this.render();
+                this.host.eventService.renderingFinished(options);
+                return;
+            }
             const lines = dataView?.matrix?.rows.root.children?.length ? parseLines(this.settings.statement.lines.value) : new Map();
             this.statement = convert(dataView, lines, this.settings.statement.variances.value, this.host.locale);
             const currentIds = new Set(this.statement.rows.map(row => row.line.id));
@@ -425,7 +439,7 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
         });
         target.addEventListener("click", event => { target.focus({ preventScroll: true }); this.select(cell, event.ctrlKey || event.metaKey); });
         target.addEventListener("keydown", event => this.keydown(event, cell));
-        target.addEventListener("contextmenu", event => { event.preventDefault(); this.contextMenu(cell, event.clientX, event.clientY); });
+        target.addEventListener("contextmenu", event => { event.preventDefault(); event.stopPropagation(); this.contextMenu(cell, event.clientX, event.clientY); });
         target.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") this.showTooltip(event, cell); });
         target.addEventListener("pointerleave", () => this.hideTooltip());
         let touchStart: { x: number; y: number } | undefined;

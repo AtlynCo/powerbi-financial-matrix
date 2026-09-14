@@ -8,7 +8,7 @@
   ],
   "dataViewMappings": [
     {
-      "conditions": [{ "Lines": { "min": 1, "max": 6 }, "Period": { "max": 1 }, "Actual": { "min": 1, "max": 1 }, "Budget": { "max": 1 }, "Prior": { "max": 1 } }],
+      "conditions": [{ "Lines": { "max": 6 }, "Period": { "max": 1 }, "Actual": { "max": 1 }, "Budget": { "max": 1 }, "Prior": { "max": 1 } }],
       "matrix": {
         "rows": { "for": { "in": "Lines" }, "dataReductionAlgorithm": { "window": { "count": 1001 } } },
         "columns": { "for": { "in": "Period" }, "dataReductionAlgorithm": { "top": { "count": 25 } } },

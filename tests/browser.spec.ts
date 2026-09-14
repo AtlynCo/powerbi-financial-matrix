@@ -126,6 +126,26 @@ test("invalid, empty, partial and zero-reference data are visible not fabricated
     expect((await hostState(page)).events.at(-1)).toBe("finished");
 });
 
+test("unmapped Lines or Actual renders empty setup state and background right-click triggers empty context menu", async ({ page }) => {
+    const linesOnly = fixture();
+    linesOnly.matrix!.valueSources = [];
+    await mount(page, linesOnly);
+    await expect(page.locator(".afm-setup")).toContainText("Bind text Line IDs");
+    expect((await hostState(page)).events.at(-1)).toBe("finished");
+
+    await page.locator(".afm-setup").click({ button: "right" });
+    expect((await hostState(page)).contexts.at(-1)).toBe("{}");
+
+    const actualOnly = fixture();
+    actualOnly.matrix!.rows = { levels: [], root: {} };
+    await update(page, actualOnly);
+    await expect(page.locator(".afm-setup")).toContainText("Bind text Line IDs");
+    expect((await hostState(page)).events.at(-1)).toBe("finished");
+
+    await page.locator(".afm").click({ button: "right", position: { x: 10, y: 10 } });
+    expect((await hostState(page)).contexts.at(-1)).toBe("{}");
+});
+
 test("notice-free successful render followed by invalid metadata shows a visible diagnostic", async ({ page }) => {
     const data = fixture();
     await mount(page, data);

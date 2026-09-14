@@ -3,10 +3,11 @@ import { dirname, join, resolve } from "node:path";
 import { createRequire } from "node:module";
 
 const root = JSON.parse(readFileSync("package.json", "utf8"));
+const pbiviz = JSON.parse(readFileSync("pbiviz.json", "utf8"));
 const queue = Object.keys(root.dependencies);
 const seen = new Set();
 const sections = [
-  "THIRD-PARTY NOTICES - Atlyn Financial Matrix 1.0.0.0",
+  `THIRD-PARTY NOTICES - Atlyn Financial Matrix ${pbiviz.visual.version}`,
   "Generated from installed, locked production dependencies. Full package sources are available through package-lock.json integrity-pinned npm references.",
   "These notices describe third-party licenses only. No project license, commercial terms, Microsoft certification or other legal approval is granted by this file."
 ];

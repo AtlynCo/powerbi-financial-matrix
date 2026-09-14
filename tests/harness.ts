@@ -48,7 +48,7 @@ export async function mount(page: Page, data: powerbi.DataView | undefined, opti
                 return Promise.resolve(selections);
             },
             clear: () => { state.clears++; selections = []; state.selected = []; callback([]); return Promise.resolve({}); },
-            showContextMenu: (id: Id) => { state.contexts.push(id.getKey()); return Promise.resolve({}); }
+            showContextMenu: (id: Id) => { state.contexts.push(typeof id?.getKey === "function" ? id.getKey() : JSON.stringify(id)); return Promise.resolve({}); }
         };
         const host = {
             createSelectionManager: () => selection,
