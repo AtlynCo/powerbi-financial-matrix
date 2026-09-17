@@ -26,6 +26,7 @@ function element<K extends keyof HTMLElementTagNameMap>(tag: K, className: strin
 
 export class Visual implements powerbi.extensibility.visual.IVisual {
     private readonly host: Host;
+    private readonly element: HTMLElement;
     private readonly root: HTMLDivElement;
     private readonly status: HTMLDivElement;
     private readonly scroll: HTMLDivElement;
@@ -33,6 +34,7 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
     private readonly selection: powerbi.extensibility.ISelectionManager;
     private readonly localization: powerbi.extensibility.ILocalizationManager;
     private readonly formatting: FormattingSettingsService;
+    private readonly onContextMenu: (event: MouseEvent) => void;
     private settings = new Settings();
     private statement: Statement = { rows: [], columns: [], issues: [], partial: false, hasHighlights: false };
     private displayRows: StatementRow[] = [];
@@ -68,15 +70,19 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
         this.scroll = element("div", "afm-scroll");
         this.footer = element("div", "afm-footer");
         this.root.append(this.status, this.scroll, this.footer);
-        options.element.append(this.root);
+        this.element = options.element;
+        this.element.append(this.root);
         this.selection.registerOnSelectCallback(ids => {
             if (!this.disposed) { this.setSelectionIds(ids); this.applySelection(); }
         });
-        this.root.addEventListener("contextmenu", event => {
+        this.onContextMenu = (event: MouseEvent) => {
             event.preventDefault();
+            event.stopPropagation();
             if (this.host.hostCapabilities.allowInteractions === false) return;
             this.selection.showContextMenu({}, { x: event.clientX, y: event.clientY });
-        });
+        };
+        this.root.addEventListener("contextmenu", this.onContextMenu);
+        this.element.addEventListener("contextmenu", this.onContextMenu);
         this.scroll.addEventListener("scroll", () => {
             this.hideTooltip();
             if (this.mode !== "grid") return;
@@ -588,6 +594,8 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
         this.disposed = true;
         cancelAnimationFrame(this.frame);
         this.hideTooltip();
+        this.element.removeEventListener("contextmenu", this.onContextMenu);
+        this.root.removeEventListener("contextmenu", this.onContextMenu);
         this.root.remove();
         this.cells = [];
         this.identityCache.clear();

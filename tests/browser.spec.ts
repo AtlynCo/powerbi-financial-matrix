@@ -144,6 +144,13 @@ test("unmapped Lines or Actual renders empty setup state and background right-cl
 
     await page.locator(".afm").click({ button: "right", position: { x: 10, y: 10 } });
     expect((await hostState(page)).contexts.at(-1)).toBe("{}");
+
+    // Right-clicking footer/background when populated also triggers empty context menu
+    const populated = fixture();
+    await update(page, populated);
+    await expect(page.locator(".afm-table")).toBeVisible();
+    await page.locator(".afm-footer").click({ button: "right" });
+    expect((await hostState(page)).contexts.at(-1)).toBe("{}");
 });
 
 test("notice-free successful render followed by invalid metadata shows a visible diagnostic", async ({ page }) => {
