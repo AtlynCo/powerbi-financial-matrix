@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const read = (relative) => readFileSync(path.join(root, ...relative.split(/[\\/]/)), "utf8");
 const json = (relative) => JSON.parse(read(relative));
+const visual = JSON.parse(readFileSync(path.join(root, "..", "pbiviz.json"), "utf8")).visual;
 const scenarios = ["Actual", "Budget", "Prior"];
 let checks = 0;
 
@@ -240,8 +241,8 @@ scenarios.forEach((scenario, index) => {
 const recipe = json("report-layout.json");
 equal(recipe.notPowerBIImportFormat, true, "Recipe is not an importable report");
 equal(recipe.desktopValidated, false, "No Desktop-validation claim");
-equal(recipe.visualGuid, "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71", "Frozen GUID");
-equal(recipe.visualVersion, "1.0.0.0", "Frozen version");
+equal(recipe.visualGuid, visual.guid, "Current visual GUID");
+equal(recipe.visualVersion, visual.version, "Current visual version");
 for (const item of [...recipe.queries, ...recipe.measureSources]) {
     assert.ok(!path.isAbsolute(item.source) && !item.source.split(/[\\/]/).includes(".."), "Portable sample-relative source");
     read(item.source);

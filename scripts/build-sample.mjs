@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, rmSync, cpSync, copyFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, cpSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readArtifact } from "./artifact.mjs";
@@ -8,9 +8,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const source = join(root, "samples", "pbip");
 const output = join(root, "dist", "sample-report");
 const artifact = await readArtifact();
-const guid = "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71";
-assert.equal(artifact.resource.visual.guid, guid);
-assert.equal(artifact.resource.visual.version, "1.0.0.0");
+const visual = JSON.parse(readFileSync(join(root, "pbiviz.json"), "utf8")).visual;
+const { guid, version } = visual;
+assert.deepEqual(artifact.resource.visual, visual);
 
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
@@ -23,9 +23,9 @@ cpSync(source, output, {
 // Copy the two official ZIP entries without changing/repackaging the PBIVIZ itself.
 const customVisual = join(output, "AtlynFinancialMatrix.Report", "CustomVisuals", guid);
 mkdirSync(join(customVisual, "resources"), { recursive: true });
-writeFileSync(join(customVisual, "package.json"), artifact.manifestText);
+writeFileSync(join(customVisual, "package.json"), artifact.manifestBytes);
 const resourcePath = join(customVisual, "resources", `${guid}.pbiviz.json`);
-writeFileSync(resourcePath, artifact.resourceText);
+writeFileSync(resourcePath, artifact.resourceBytes);
 
 const packageFolder = join(output, "VisualPackage");
 mkdirSync(packageFolder, { recursive: true });
@@ -34,7 +34,7 @@ copyFileSync(artifact.path, embeddedPath);
 const summary = {
   builtAt: new Date().toISOString(), sourceDir: source, outDir: output,
   embeddedResource: {
-    guid, version: artifact.resource.visual.version, sourceArtifact: artifact.path,
+    guid, version, sourceArtifact: artifact.path,
     embeddedPath, resourcePath, manifestPath: join(customVisual, "package.json"),
     sha256: artifact.sha256, bytes: artifact.size
   },

@@ -27,8 +27,7 @@ const REPORT_DIR = path.join(PBIP, "AtlynFinancialMatrix.Report");
 const MODEL_DIR = path.join(PBIP, "AtlynFinancialMatrix.SemanticModel");
 const TABLES_DIR = path.join(MODEL_DIR, "definition", "tables");
 
-const RESOURCE_GUID = "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71";
-const RESOURCE_VERSION = "1.0.0.0";
+const { guid: RESOURCE_GUID, version: RESOURCE_VERSION } = readJson(path.join(REPO_ROOT, "pbiviz.json")).visual;
 
 const results = [];
 function record(status, name, detail) {
@@ -568,8 +567,16 @@ if (!existsSync(buildSummaryPath)) {
   assertCheck("generated-required-files", generatedStructureIssues.length === 0, generatedStructureIssues.join("; ") || "Generated project has all required entry files");
   const artifact = await readArtifact();
   assertCheck("resource-current-artifact", summary.embeddedResource?.sha256 === artifact.sha256, "Build record matches the current official package");
-  assertCheck("resource-pbir-manifest", readText(summary.embeddedResource.manifestPath) === artifact.manifestText, "Unmodified official manifest in CustomVisuals");
-  assertCheck("resource-pbir-metadata", readText(summary.embeddedResource.resourcePath) === artifact.resourceText, "Unmodified official metadata/JS/CSS/notices in CustomVisuals");
+  assertCheck(
+    "resource-pbir-manifest",
+    readFileSync(summary.embeddedResource.manifestPath).equals(artifact.manifestBytes),
+    "Byte-exact official manifest in CustomVisuals"
+  );
+  assertCheck(
+    "resource-pbir-metadata",
+    readFileSync(summary.embeddedResource.resourcePath).equals(artifact.resourceBytes),
+    "Byte-exact official metadata/JS/CSS/notices in CustomVisuals"
+  );
   for (const sourceFile of walk(PBIP)) {
     if (sourceFile.startsWith(SCHEMA_DIR) || path.basename(sourceFile) === "README.md") continue;
     const generatedFile = path.join(summary.outDir, path.relative(PBIP, sourceFile));

@@ -41,7 +41,7 @@ Release-quality validation is local only. The former GitHub workflow has been re
 - [ ] Run/review `npm run audit:tooling`; triage build-only advisories separately from runtime issues.
 - [ ] Run `npm run release:local` from the clean final source commit and preserve every local command log; no GitHub-hosted CI/CD.
 - [ ] Confirm `eslint-plugin-powerbi-visuals` is installed, recommended runtime-source rules are active, and `npm run eslint` uses Microsoft's documented script.
-- [ ] Record exact `.pbiviz` SHA-256; validate frozen GUID and `1.0.0.0` version.
+- [ ] Record exact `.pbiviz` SHA-256; validate the current `pbiviz.json` GUID and version.
 - [ ] Review the finalized build wrapper's worktree-isolated development-certificate generation and cleanup; no user trust-store installation or cross-checkout secret reuse.
 - [ ] Confirm the intended ungated runtime: `privileges: []`, `externalJS: []`, no runtime network/auth/entitlement checks/writeback, and no embedded credentials.
 - [ ] Review generated third-party notices for runtime bundled dependencies.

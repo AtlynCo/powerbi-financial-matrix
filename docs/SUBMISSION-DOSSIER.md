@@ -10,7 +10,7 @@ The additional **Power BI certification badge is required**, subject to Microsof
 
 The current repository has **no first-party LICENSE/LICENCE/COPYING file and no `package.json` license identifier**. This update preserves that state and all third-party terms; it does not invent a license, EULA, price or legal approval. See [the README's source-term statement](../README.md#storefront-acquisition-runtime-and-source-terms). Legal/listing approvals remain distinct from the resolved commercial architecture.
 
-No runtime or package content changes are needed for this decision: retain version `1.0.0.0` and the exact sealed PBIVIZ. Do not rerun the packaging/dossier commands below solely for documentation updates, modify frozen folders or move `certification` to a documentation-only commit. Preserve the package's original source provenance; the coordinator reconciles final submission source/assets after native acceptance.
+No runtime or package content changes are needed for this decision. Do not rerun the packaging/dossier commands below solely for documentation updates, modify frozen folders or move `certification` to a documentation-only commit. Preserve the package's original source provenance; the coordinator reconciles final submission source/assets after native acceptance.
 
 ## Immutable delivery
 
@@ -20,7 +20,7 @@ The final dossier manifest records the exact source commit, official `.pbiviz` S
 | --- | --- |
 | Display name | Atlyn Financial Matrix |
 | Visual GUID | `AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71` |
-| Version | `1.0.0.0` |
+| Version | `1.0.1.0` |
 | Repository | Private `AtlynCo/powerbi-financial-matrix`, one visual only |
 | Certification source | Lowercase `certification` at exactly the candidate source commit; coordinator freezes it for submission |
 | Runtime package | Official SDK package in ignored `dist`, not a hand-edited archive |

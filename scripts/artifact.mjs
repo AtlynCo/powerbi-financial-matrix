@@ -9,10 +9,15 @@ export async function readArtifact() {
   const path = resolve("dist", files[0]);
   const bytes = readFileSync(path);
   const zip = await JSZip.loadAsync(bytes, { checkCRC32: true });
-  const manifestText = await zip.file("package.json").async("string");
+  const manifestBytes = await zip.file("package.json").async("nodebuffer");
+  const manifestText = manifestBytes.toString("utf8");
   const manifest = JSON.parse(manifestText);
   const resourcePath = `resources/${manifest.visual.guid}.pbiviz.json`;
-  const resourceText = await zip.file(resourcePath).async("string");
+  const resourceBytes = await zip.file(resourcePath).async("nodebuffer");
+  const resourceText = resourceBytes.toString("utf8");
   const resource = JSON.parse(resourceText);
-  return { path, sha256: createHash("sha256").update(bytes).digest("hex"), size: bytes.length, manifest, resource, manifestText, resourceText };
+  return {
+    path, sha256: createHash("sha256").update(bytes).digest("hex"), size: bytes.length,
+    manifest, resource, manifestBytes, resourceBytes, manifestText, resourceText
+  };
 }
