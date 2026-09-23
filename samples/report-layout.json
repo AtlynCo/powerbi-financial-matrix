@@ -39,7 +39,8 @@
     "height":900,
     "title":{"x":24,"y":8,"width":1552,"height":36},
     "periodSlicer":{"field":"Period[Period]","x":24,"y":48,"width":1552,"height":64,"defaultSelection":["Jan 2025","Feb 2025","Mar 2025"]},
-    "matrix":{"x":24,"y":120,"width":1552,"height":752},
+    "usageTips":{"x":24,"y":120,"width":1552,"height":84},
+    "matrix":{"x":24,"y":212,"width":1552,"height":660},
     "statement":{"variances":true,"direction":false}
   },
   "pages": [
@@ -49,6 +50,7 @@
       "optional":false,
       "roles":{"Lines":["StatementLines[SectionID]","StatementLines[LineID]"],"Period":["Period[Period]"],"Actual":["[Actual]"],"Budget":["[Budget]"],"Prior":["[Prior]"]},
       "lineMetadataSource":"pnl\\line-metadata.json",
+      "usageTips":"Prerequisites: open this generated PBIP in Power BI Desktop, refresh the inline sample model, then save as PBIX. Field roles: Lines = StatementLines[SectionID] > [LineID], Period = Period[Period], values = Actual/Budget/Prior measures. Formatting, signs and variance behavior come from the line metadata setting. Use +/- only for delivered children; Shift+F10 or right-click opens the Power BI context menu and host-defined drillthrough when a destination page is configured.",
       "hostHierarchyDepth":2,
       "localInitialPresentation":"expanded delivered descendants"
     },
@@ -58,6 +60,7 @@
       "optional":true,
       "roles":{"Lines":["BalanceLines[LineID]"],"Period":["Period[Period]"],"Actual":["[BS Actual]"],"Budget":["[BS Budget]"],"Prior":["[BS Prior]"]},
       "lineMetadataSource":"patterns\\balance-line-metadata.json",
+      "usageTips":"Tips: Balance lines are disconnected presentation rows; all totals and period-end balances are supplied by model measures, not calculated by the visual. Bind Lines to BalanceLines[LineID], Period to Period[Period], and Actual/Budget/Prior to BS measures. Line metadata controls display formats and favorability. Context menu, tooltips and drillthrough are native Power BI behaviors and require eligible selected fields plus a configured destination.",
       "hostHierarchyDepth":1
     },
     {
@@ -66,6 +69,7 @@
       "optional":true,
       "roles":{"Lines":["CashFlowLines[LineID]"],"Period":["Period[Period]"],"Actual":["[CF Actual]"],"Budget":["[CF Budget]"],"Prior":["[CF Prior]"]},
       "lineMetadataSource":"patterns\\cash-flow-line-metadata.json",
+      "usageTips":"Tips: Cash flow uses a disconnected one-level Lines role and model-supplied CF Actual/Budget/Prior measures. Select contiguous periods for bridge checks; the sample does not invent missing-period movement. Formatting and variance rules come from cash-flow line metadata. Use Shift+F10/right-click for Power BI context menu and configured drillthrough; refresh the inline sample model before saving the final PBIX.",
       "hostHierarchyDepth":1
     }
   ]

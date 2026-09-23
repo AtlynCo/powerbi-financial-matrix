@@ -62,7 +62,7 @@ The report references its local semantic model through `datasetReference.byPath`
 | CashFlow | CashFlowLines[LineID]; `CashFlowFact[CF Actual/CF Budget/CF Prior]`; explicit cash bridge. |
 | ModelChecks | Native `pivotTable` matrix on the P&L hierarchy/Period with the three supplied measures, for raw model-result cross-checking rather than mixed-row presentation formatting. |
 
-Each page is 1600 x 900 with title, Period slicer and the statement/native matrix at the positions in `samples\report-layout.json`. All five custom roles are bound. Metadata is a correctly single-quoted SQ text literal (embedded apostrophes doubled); decoding it yields the canonical JSON byte-for-byte. Variances are enabled and RTL is initially off.
+Each page is 1600 x 900 with title, Period slicer, visible sample usage tips and the statement/native matrix at the positions in `samples\report-layout.json`. The custom-visual pages call out Desktop refresh/save prerequisites, field-role bindings, line-metadata formatting, local expansion limits and native context-menu/drillthrough requirements. All five custom roles are bound. Metadata is a correctly single-quoted SQ text literal (embedded apostrophes doubled); decoding it yields the canonical JSON byte-for-byte. Variances are enabled and RTL is initially off.
 
 ## Resource and binding evidence
 

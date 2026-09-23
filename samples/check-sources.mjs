@@ -249,6 +249,11 @@ for (const item of [...recipe.queries, ...recipe.measureSources]) {
 }
 for (const page of recipe.pages) {
     read(page.lineMetadataSource);
+    assert.ok(typeof page.usageTips === "string" && page.usageTips.length >= 120 && page.usageTips.length <= 700, `${page.name}: concise visible usage tips`);
+    assert.match(page.usageTips, /Field roles|Bind Lines|Lines role/i, `${page.name}: field-role tip`);
+    assert.match(page.usageTips, /formatting|format|metadata/i, `${page.name}: formatting tip`);
+    assert.match(page.usageTips, /context menu|right-click|Shift\+F10/i, `${page.name}: context menu tip`);
+    assert.match(page.usageTips, /drillthrough|drill/i, `${page.name}: drill tip`);
     assert.ok(page.roles.Lines.length >= 1 && page.roles.Lines.length <= 6);
     equal(page.roles.Actual.length, 1, `${page.name}: actual binding`);
     assert.ok(!JSON.stringify(page.roles).includes("[Scenario]"), "Scenario measures, not grouping");

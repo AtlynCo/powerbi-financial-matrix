@@ -417,16 +417,18 @@ for (const pageSpec of layout.pages) {
   assertCheck(`page:${folder}:size`, pageJson.width === layout.pageDefaults.width && pageJson.height === layout.pageDefaults.height, JSON.stringify({ width: pageJson.width, height: pageJson.height }));
 
   const titleVisualPath = path.join(pageDir, "visuals", "Title", "visual.json");
+  const usageTipsVisualPath = path.join(pageDir, "visuals", "UsageTips", "visual.json");
   const sliceVisualPath = path.join(pageDir, "visuals", "PeriodSlicer", "visual.json");
   const matrixVisualPath = path.join(pageDir, "visuals", "StatementMatrix", "visual.json");
   for (const [label, p] of [
     ["Title", titleVisualPath],
+    ["UsageTips", usageTipsVisualPath],
     ["PeriodSlicer", sliceVisualPath],
     ["StatementMatrix", matrixVisualPath],
   ]) {
     assertCheck(`page:${folder}:${label}-exists`, existsSync(p), p);
   }
-  if (!existsSync(titleVisualPath) || !existsSync(sliceVisualPath) || !existsSync(matrixVisualPath)) continue;
+  if (!existsSync(titleVisualPath) || !existsSync(usageTipsVisualPath) || !existsSync(sliceVisualPath) || !existsSync(matrixVisualPath)) continue;
 
   const titleVisual = readJson(titleVisualPath);
   const runValue = titleVisual.visual?.objects?.general?.[0]?.properties?.paragraphs?.[0]?.textRuns?.[0]?.value;
@@ -436,6 +438,18 @@ for (const pageSpec of layout.pages) {
     JSON.stringify({ x: titleVisual.position.x, y: titleVisual.position.y, width: titleVisual.position.width, height: titleVisual.position.height }) ===
       JSON.stringify(layout.pageDefaults.title),
     JSON.stringify(titleVisual.position)
+  );
+
+  const usageTipsVisual = readJson(usageTipsVisualPath);
+  const usageTipsValue = usageTipsVisual.visual?.objects?.general?.[0]?.properties?.paragraphs?.[0]?.textRuns?.[0]?.value;
+  assertCheck(`page:${folder}:usage-tips-text`, usageTipsValue === pageSpec.usageTips, `expected ${JSON.stringify(pageSpec.usageTips)}, got ${JSON.stringify(usageTipsValue)}`);
+  assertCheck(
+    `page:${folder}:usage-tips-position`,
+    usageTipsVisual.position.x === layout.pageDefaults.usageTips.x &&
+      usageTipsVisual.position.y === layout.pageDefaults.usageTips.y &&
+      usageTipsVisual.position.width === layout.pageDefaults.usageTips.width &&
+      usageTipsVisual.position.height === layout.pageDefaults.usageTips.height,
+    JSON.stringify(usageTipsVisual.position)
   );
 
   const sliceVisual = readJson(sliceVisualPath);

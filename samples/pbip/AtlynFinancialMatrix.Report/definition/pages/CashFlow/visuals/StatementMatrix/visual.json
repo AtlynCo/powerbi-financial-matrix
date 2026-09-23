@@ -3,11 +3,11 @@
   "name": "StatementMatrix",
   "position": {
     "x": 24,
-    "y": 120,
+    "y": 212,
     "width": 1552,
-    "height": 752,
-    "z": 2,
-    "tabOrder": 2
+    "height": 660,
+    "z": 3,
+    "tabOrder": 3
   },
   "visual": {
     "visualType": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",

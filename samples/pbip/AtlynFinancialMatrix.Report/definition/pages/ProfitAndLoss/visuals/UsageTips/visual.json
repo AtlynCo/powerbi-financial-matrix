@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "UsageTips",
+  "position": {
+    "x": 24,
+    "y": 120,
+    "width": 1552,
+    "height": 84,
+    "z": 2,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Prerequisites: open this generated PBIP in Power BI Desktop, refresh the inline sample model, then save as PBIX. Field roles: Lines = StatementLines[SectionID] > [LineID], Period = Period[Period], values = Actual/Budget/Prior measures. Formatting, signs and variance behavior come from the line metadata setting. Use +/- only for delivered children; Shift+F10 or right-click opens the Power BI context menu and host-defined drillthrough when a destination page is configured.",
+                    "textStyle": {
+                      "fontSize": "10px"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

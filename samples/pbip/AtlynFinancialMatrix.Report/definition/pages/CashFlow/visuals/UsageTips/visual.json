@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "UsageTips",
+  "position": {
+    "x": 24,
+    "y": 120,
+    "width": 1552,
+    "height": 84,
+    "z": 2,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Tips: Cash flow uses a disconnected one-level Lines role and model-supplied CF Actual/Budget/Prior measures. Select contiguous periods for bridge checks; the sample does not invent missing-period movement. Formatting and variance rules come from cash-flow line metadata. Use Shift+F10/right-click for Power BI context menu and configured drillthrough; refresh the inline sample model before saving the final PBIX.",
+                    "textStyle": {
+                      "fontSize": "10px"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

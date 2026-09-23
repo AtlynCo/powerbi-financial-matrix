@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "UsageTips",
+  "position": {
+    "x": 24,
+    "y": 120,
+    "width": 1552,
+    "height": 84,
+    "z": 2,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Tips: Balance lines are disconnected presentation rows; all totals and period-end balances are supplied by model measures, not calculated by the visual. Bind Lines to BalanceLines[LineID], Period to Period[Period], and Actual/Budget/Prior to BS measures. Line metadata controls display formats and favorability. Context menu, tooltips and drillthrough are native Power BI behaviors and require eligible selected fields plus a configured destination.",
+                    "textStyle": {
+                      "fontSize": "10px"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
