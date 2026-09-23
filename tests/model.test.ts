@@ -130,6 +130,33 @@ test("period slots and query-role order stay aligned, with no period sums", () =
     expectContract(() => convert(data, config(), true), "Error_Columns");
 });
 
+test("Desktop period-only column hierarchy maps every projected measure in value-source order", () => {
+    const data = fixture([line("revenue", 1)], 2);
+    const periodSource = data.matrix!.columns.levels[0]!.sources[0]!;
+    data.matrix!.columns = {
+        levels: [{ sources: [periodSource] }],
+        root: {
+            children: [
+                { level: 0, value: "2026-01", identity: { key: "period-0" } },
+                { level: 0, value: "2026-02", identity: { key: "period-1" } }
+            ]
+        }
+    };
+
+    const result = convert(data, config(), true);
+
+    assert.equal(result.columns.length, 14);
+    assert.deepEqual(
+        result.columns.filter(column => column.kind === "value").map(column => [column.period, column.scenario, column.slot]),
+        [
+            ["2026-01", "Actual", 0], ["2026-01", "Budget", 1], ["2026-01", "Prior", 2],
+            ["2026-02", "Actual", 3], ["2026-02", "Budget", 4], ["2026-02", "Prior", 5]
+        ]
+    );
+    assert.deepEqual(getCell(result.rows[0]!, result.columns[0]!).number, { state: "number", value: 100 });
+    assert.deepEqual(getCell(result.rows[0]!, result.columns[7]!).number, { state: "number", value: 100 });
+});
+
 test("optional scenarios and no period use the same contract", () => {
     const data = fixture([line("revenue", 1)], 1, ["Actual"]);
     data.matrix!.columns = { root: {}, levels: [] };

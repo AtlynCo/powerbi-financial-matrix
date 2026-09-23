@@ -238,7 +238,12 @@ export function convert(dataView: powerbi.DataView | undefined, lines: Map<strin
         if (periodKeys.has(key)) throw new ContractError("Error_Columns");
         periodKeys.add(key);
         const slots = new Map<number, number>();
-        const leaves = node.children?.length ? node.children : [node];
+        // Desktop omits a measure hierarchy beneath a period group. In that shape,
+        // valueSources remain in projection order and the row cells retain their source indexes.
+        if (!node.children?.length) {
+            matrix.valueSources.forEach((_, sourceIndex) => slots.set(sourceIndex, slot++));
+        }
+        const leaves = node.children ?? [];
         for (const leaf of leaves) {
             if (leaf.children?.length) throw new ContractError("Error_PeriodRoles");
             const sourceIndex = leaf.levelSourceIndex ?? 0;
