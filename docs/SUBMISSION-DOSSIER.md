@@ -20,7 +20,7 @@ The final dossier manifest records the exact source commit, official `.pbiviz` S
 | --- | --- |
 | Display name | Atlyn Financial Matrix |
 | Visual GUID | `AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71` |
-| Version | `1.0.1.0` |
+| Version | `1.0.2.0` |
 | Repository | Private `AtlynCo/powerbi-financial-matrix`, one visual only |
 | Certification source | Lowercase `certification` at exactly the candidate source commit; coordinator freezes it for submission |
 | Runtime package | Official SDK package in ignored `dist`, not a hand-edited archive |
@@ -93,10 +93,10 @@ Primary requirements were read on 2026-09-09: [publishing assets](https://learn.
 | Private certification repository access | Coordinator: approved Microsoft validation-team read access, account/2FA/recovery requirements, exact frozen lowercase branch and submitted package match. Never place credentials in source/dossier. |
 | Required Power BI certification badge | Coordinator: request the additional certification and obtain Microsoft's actual approval before displaying the badge or claiming certification. It is an owner-required outcome, not a completed gate. |
 | Original-code license and distribution rights | No first-party LICENSE/LICENCE/COPYING file or package license identifier currently exists; preserve this state unless the legal owner explicitly supplies approved terms. Third-party notices do not license Atlyn's original code or authorize public distribution. |
-| EULA / contract | Legal owner: choose the applicable Microsoft standard contract or approved EULA/URL; do not silently accept a contract during preparation. |
-| Privacy policy HTTPS URL | Legal/privacy owner: approved public policy and contact, separate from support FAQ. No runtime network does not waive the listing requirement. |
+| EULA / contract | Legal owner: choose the applicable Microsoft standard contract or approved EULA/URL; do not silently accept a contract during preparation. Atlyn's customer Terms are published at `https://atlynco.github.io/atlyn-powerbi-support/legal/terms/`, but the legal owner still decides whether Partner Center submission uses Microsoft's standard contract or this author-supplied EULA. |
+| Privacy policy HTTPS URL | Legal/privacy owner: approved public policy and contact, separate from support FAQ. Atlyn publishes a verified policy at `https://atlynco.github.io/atlyn-powerbi-support/legal/privacy/`; the coordinator/legal owner still selects and finalizes the exact Partner Center listing URL. No runtime network does not waive the listing requirement. |
 | Storefront / listing configuration | Business model approved: existing Atlyn storefront subscriptions, ungated runtime and free shared viewing without Atlyn activation. Coordinator/legal owner finalize exact acquisition links, prices, terms and Marketplace fields; no paid-author enforcement integration is pending. |
-| Support operations | Support owner: approve Financial Matrix support documentation, monitoring/responsiveness and ownership. Existing metadata is `Atlyn <atlyn.help@gmail.com>` and `https://www.atlynco.com/docs/faq`; metadata is not proof of operations. |
+| Support operations | Support owner: approve Financial Matrix support documentation, monitoring/responsiveness and ownership. Existing metadata is `Atlyn <atlyn.help@gmail.com>` and `https://atlynco.github.io/atlyn-powerbi-support/docs/faq/`; metadata is not proof of operations. |
 | Listing/assets and final submission | Coordinator: approve copy, categories, screenshots, rights, preview audiences and all required Partner Center fields; upload actual immutable files and request certification. This session does not manipulate shared UI or submit. |
 
 The complete native/manual scenarios and evidence template are in the [publication checklist](PUBLICATION-CHECKLIST.md). Unchecked gates are real blockers, not implied passes.

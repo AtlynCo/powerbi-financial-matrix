@@ -1,4 +1,4 @@
-THIRD-PARTY NOTICES - Atlyn Financial Matrix 1.0.1.0
+THIRD-PARTY NOTICES - Atlyn Financial Matrix 1.0.2.0
 Generated from installed, locked production dependencies. Full package sources are available through package-lock.json integrity-pinned npm references.
 These notices describe third-party licenses only. No project license, commercial terms, Microsoft certification or other legal approval is granted by this file.
 

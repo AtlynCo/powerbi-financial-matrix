@@ -4,9 +4,9 @@
     "displayName": "Atlyn Financial Matrix",
     "guid": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
     "visualClassName": "Visual",
-    "version": "1.0.1.0",
+    "version": "1.0.2.0",
     "description": "Read-only financial statements with explicit line semantics, model-supplied totals and bounded scrolling.",
-    "supportUrl": "https://www.atlynco.com/docs/faq",
+    "supportUrl": "https://atlynco.github.io/atlyn-powerbi-support/docs/faq/",
     "gitHubUrl": "https://github.com/AtlynCo/powerbi-financial-matrix"
   },
   "apiVersion": "5.11.0",

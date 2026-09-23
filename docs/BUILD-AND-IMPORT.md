@@ -15,10 +15,10 @@ Do not change the frozen identity casually:
 
 ```text
 GUID:    AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71
-Version: 1.0.1.0
+Version: 1.0.2.0
 ```
 
-The package uses the coordinator-confirmed shared Atlyn metadata: author **Atlyn**, email **atlyn.help@gmail.com**, and support URL **https://www.atlynco.com/docs/faq**. These are existing contact/FAQ details, not evidence that the mailbox is monitored, support is responsive, or this visual is approved for publication. The [publication checklist](PUBLICATION-CHECKLIST.md) retains those operational and legal gates.
+The package uses the coordinator-confirmed shared Atlyn metadata: author **Atlyn**, email **atlyn.help@gmail.com**, and support URL **https://atlynco.github.io/atlyn-powerbi-support/docs/faq/**. These are existing contact/FAQ details, not evidence that the mailbox is monitored, support is responsive, or this visual is approved for publication. The [publication checklist](PUBLICATION-CHECKLIST.md) retains those operational and legal gates.
 
 ## Reproduce the build
 
@@ -103,15 +103,15 @@ The offline sample check is available as `npm run test:samples` (or `node .\samp
 The SDK creates:
 
 ```text
-dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.1.0.pbiviz
-dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.1.0.pbiviz.sha256
+dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.2.0.pbiviz
+dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.2.0.pbiviz.sha256
 ```
 
 `dist` is intentionally ignored. The `.pbiviz` is a real packaged visual, not a renamed JavaScript file. The sidecar is produced by artifact validation; verify it against the exact file distributed internally:
 
 ```powershell
-Get-FileHash .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.1.0.pbiviz -Algorithm SHA256
-Get-Content .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.1.0.pbiviz.sha256
+Get-FileHash .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.2.0.pbiviz -Algorithm SHA256
+Get-Content .\dist\AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71.1.0.2.0.pbiviz.sha256
 ```
 
 Compare the digest values, not merely the filenames. Hashing establishes artifact identity, not Microsoft approval or legal permission to distribute. `assets\icon.png` is the original 20 × 20 visual icon. Full production dependency licenses and embedded Globalize copyright notices are preserved in the packaged `ThirdParty_Notices` localization resource; validation compares that text with `THIRD-PARTY-NOTICES.txt`. This avoids depending on a webpack license sidecar that the SDK archive may omit. Dependency notices are separate from the repository's original-code licensing decision.

@@ -94,7 +94,9 @@ Use a destination with the bound fields StatementLines[LineID] and Period[Period
 
 ## Legal, organizational and public-distribution gate
 
-Configured package metadata is **Atlyn <atlyn.help@gmail.com>**, with support URL **https://www.atlynco.com/docs/faq**. The coordinator supplied these existing shared Atlyn details and confirmed the FAQ content. This establishes metadata provenance, not monitored support, responsiveness, a service commitment or approval to publish this visual.
+Configured package metadata is **Atlyn <atlyn.help@gmail.com>**, with support URL **https://atlynco.github.io/atlyn-powerbi-support/docs/faq/**. The prior `www.atlynco.com/docs/faq` URL no longer resolves; the support URL and this checklist's referenced FAQ have been updated to Atlyn's verified GitHub Pages support site, which also publishes [Terms](https://atlynco.github.io/atlyn-powerbi-support/legal/terms/) and a [Privacy Policy](https://atlynco.github.io/atlyn-powerbi-support/legal/privacy/). This establishes metadata provenance, not monitored support, responsiveness, or approval to publish this visual.
+
+Per the verified Terms, Financial Matrix is one of Atlyn's eight additional all-access visuals: the installed package remains **technically ungated** (no license keys, runtime licensing checks, or author-identity enforcement), but the customer Terms require an **active paid or trialing all-access subscription** to authorize an author's acquisition/use. Shared-report viewers do not need a separate Atlyn subscription. This is a legal-authorization distinction, not a runtime behavior change; no key, signer, Entra ID sign-in, licensing API, feature gate or runtime request is added.
 
 - [ ] Record existing first-party terms accurately: no first-party LICENSE/LICENCE/COPYING file or `package.json` license identifier is currently present. Preserve that state; only the legal owner may supply new approved terms. No source license is inferred from storefront approval, repository visibility or third-party notices.
 - [ ] Legal approves third-party licensing/attribution and any proposed end-user terms.

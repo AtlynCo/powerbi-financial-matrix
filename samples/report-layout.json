@@ -4,7 +4,7 @@
   "notPowerBIImportFormat": true,
   "desktopValidated": false,
   "visualGuid": "AtlynFinancialMatrixCA42B8646E934AF1B6252CB8E39C0D71",
-  "visualVersion": "1.0.1.0",
+  "visualVersion": "1.0.2.0",
   "queries": [
     {"name":"Period","source":"pnl\\Period.pq","optional":false},
     {"name":"Accounts","source":"pnl\\Accounts.pq","optional":false},
