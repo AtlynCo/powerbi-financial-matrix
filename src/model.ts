@@ -206,7 +206,11 @@ export function visibleRows(rows: StatementRow[], collapsed: ReadonlySet<string>
 export function convert(dataView: powerbi.DataView | undefined, lines: Map<string, Line>, variances: boolean, locale = "en-US"): Statement {
     const matrix = dataView?.matrix;
     const result: Statement = { rows: [], columns: [], issues: [], partial: !!dataView?.metadata.segment, hasHighlights: false };
-    if (!matrix || !matrix.rows.root.children?.length) {
+    const hasDataRows = Boolean(matrix?.rows?.root?.children?.some(node => !node.isSubtotal));
+    const columnLevels = matrix?.columns?.levels ?? [];
+    const periodLevels = columnLevels.filter(level => level.sources.some(source => source.roles?.Period));
+    const hasPeriodColumns = !periodLevels.length || Boolean(matrix?.columns?.root?.children?.some(node => !node.isSubtotal));
+    if (!matrix || !matrix.rows.root.children || !hasDataRows || !hasPeriodColumns) {
         result.issues.push({ key: "Status_Empty" });
         return result;
     }
@@ -227,8 +231,6 @@ export function convert(dataView: powerbi.DataView | undefined, lines: Map<strin
     if (!scenarios.has("Actual")) throw new ContractError("Error_Measures");
     const periods: { key: string; label: string; path: powerbi.DataViewMatrixNode[]; slots: Map<number, number> }[] = [];
     const periodKeys = new Set<string>();
-    const columnLevels = matrix.columns.levels;
-    const periodLevels = columnLevels.filter(level => level.sources.some(source => source.roles?.Period));
     if (periodLevels.length > 1 || periodLevels.some(level => level.sources.length !== 1)) throw new ContractError("Error_PeriodRoles");
     let slot = 0;
     let periodOverflow = false;

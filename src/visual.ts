@@ -129,9 +129,12 @@ export class Visual implements powerbi.extensibility.visual.IVisual {
             this.identityCache.clear();
             this.formatCache.clear();
             this.hideTooltip();
-            const hasLines = Boolean(dataView?.matrix?.rows?.root?.children?.length && dataView?.matrix?.rows?.levels?.some(l => l.sources?.some(s => s.roles?.Lines)));
+            const columnLevels = dataView?.matrix?.columns?.levels ?? [];
+            const periodLevels = columnLevels.filter(level => level.sources?.some(source => source.roles?.Period));
+            const hasLines = Boolean(dataView?.matrix?.rows?.root?.children?.some(n => !n.isSubtotal) && dataView?.matrix?.rows?.levels?.some(l => l.sources?.some(s => s.roles?.Lines)));
             const hasActual = Boolean(dataView?.matrix?.valueSources?.some(s => s.roles?.Actual));
-            if (!hasLines || !hasActual) {
+            const hasPeriodWhenMapped = !periodLevels.length || Boolean(dataView?.matrix?.columns?.root?.children?.some(n => !n.isSubtotal));
+            if (!hasLines || !hasActual || !hasPeriodWhenMapped) {
                 this.statement = { rows: [], columns: [], issues: [], partial: false, hasHighlights: false };
                 this.displayRows = [];
                 this.render();

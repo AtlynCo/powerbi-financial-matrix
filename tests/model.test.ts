@@ -316,3 +316,22 @@ test("undefined and nonfinite comparisons never receive favorable/unfavorable co
     assert.equal(overflow.number.state, "invalid");
     assert.equal(overflow.favorable, "neutral");
 });
+
+test("unpopulated Desktop host matrix with subtotal-only root and empty columns yields Status_Empty not Error_Columns", () => {
+    const data = fixture();
+    data.matrix!.rows.root.children = [{ level: 0, isSubtotal: true, values: {} }];
+    data.matrix!.columns.root = {};
+    const result = convert(data, config(), true);
+    assert.deepEqual(result.issues, [{ key: "Status_Empty" }]);
+    assert.equal(result.rows.length, 0);
+    assert.equal(result.columns.length, 0);
+});
+
+test("period-mapped matrix with childless column root yields Status_Empty not Error_Columns", () => {
+    const data = fixture();
+    data.matrix!.columns.root = {};
+    const result = convert(data, config(), true);
+    assert.deepEqual(result.issues, [{ key: "Status_Empty" }]);
+    assert.equal(result.rows.length, 0);
+    assert.equal(result.columns.length, 0);
+});
