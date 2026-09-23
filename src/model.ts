@@ -258,7 +258,7 @@ export function convert(dataView: powerbi.DataView | undefined, lines: Map<strin
         // Count one extra period to disclose a reduction boundary without traversing an unbounded input.
         for (const node of nodes.slice(0, LIMITS.periods + 1)) {
             if (node.isSubtotal) {
-                slot += node.children?.length || 1;
+                slot += node.children?.length || matrix.valueSources.length;
                 continue;
             }
             const value = groupValue(node);

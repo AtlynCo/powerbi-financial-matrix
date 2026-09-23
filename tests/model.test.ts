@@ -157,6 +157,43 @@ test("Desktop period-only column hierarchy maps every projected measure in value
     assert.deepEqual(getCell(result.rows[0]!, result.columns[7]!).number, { state: "number", value: 100 });
 });
 
+test("Desktop period-only subtotals advance by every projected measure slot", () => {
+    const data = fixture([line("revenue", 1)], 2);
+    const periodSource = data.matrix!.columns.levels[0]!.sources[0]!;
+    data.matrix!.columns = {
+        levels: [{ sources: [periodSource] }],
+        root: {
+            children: [
+                { level: 0, value: "2026-01", identity: { key: "period-0" } },
+                { isSubtotal: true },
+                { level: 0, value: "2026-02", identity: { key: "period-1" } }
+            ]
+        }
+    };
+    data.matrix!.rows.root.children![0]!.values = {
+        0: { value: 100, valueSourceIndex: 0 },
+        1: { value: 80, valueSourceIndex: 1 },
+        2: { value: 60, valueSourceIndex: 2 },
+        3: { value: 999, valueSourceIndex: 0 },
+        4: { value: 999, valueSourceIndex: 1 },
+        5: { value: 999, valueSourceIndex: 2 },
+        6: { value: 200, valueSourceIndex: 0 },
+        7: { value: 160, valueSourceIndex: 1 },
+        8: { value: 120, valueSourceIndex: 2 }
+    };
+
+    const result = convert(data, config(), true);
+
+    assert.deepEqual(
+        result.columns.filter(column => column.kind === "value").map(column => [column.period, column.scenario, column.slot]),
+        [
+            ["2026-01", "Actual", 0], ["2026-01", "Budget", 1], ["2026-01", "Prior", 2],
+            ["2026-02", "Actual", 6], ["2026-02", "Budget", 7], ["2026-02", "Prior", 8]
+        ]
+    );
+    assert.deepEqual(getCell(result.rows[0]!, result.columns[7]!).number, { state: "number", value: 200 });
+});
+
 test("optional scenarios and no period use the same contract", () => {
     const data = fixture([line("revenue", 1)], 1, ["Actual"]);
     data.matrix!.columns = { root: {}, levels: [] };
