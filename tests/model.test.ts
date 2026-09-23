@@ -335,3 +335,20 @@ test("period-mapped matrix with childless column root yields Status_Empty not Er
     assert.equal(result.rows.length, 0);
     assert.equal(result.columns.length, 0);
 });
+
+test("malformed nonempty period and source shapes strictly throw Error_Columns rather than mask as empty", () => {
+    const outOfRange = fixture();
+    outOfRange.matrix!.columns.root.children![0]!.children = [{ level: 1, levelSourceIndex: 99 }];
+    expectContract(() => convert(outOfRange, config(), true), "Error_Columns");
+
+    const duplicateSlot = fixture();
+    duplicateSlot.matrix!.columns.root.children![0]!.children = [
+        { level: 1, levelSourceIndex: 0 },
+        { level: 1, levelSourceIndex: 0 }
+    ];
+    expectContract(() => convert(duplicateSlot, config(), true), "Error_Columns");
+
+    const sourceMismatch = fixture();
+    sourceMismatch.matrix!.rows.root.children![0]!.values![0]!.valueSourceIndex = 2;
+    expectContract(() => convert(sourceMismatch, config(), true), "Error_Columns");
+});
