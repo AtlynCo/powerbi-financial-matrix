@@ -1,6 +1,6 @@
 {
   "name": "atlyn-financial-matrix",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Read-only, model-authoritative financial statement presentation for Power BI.",
   "scripts": {
@@ -50,6 +50,15 @@
     "qs": "6.16.0",
     "sockjs": {
       "uuid": "11.1.1"
+    },
+    "fast-uri": "3.1.8",
+    "hono": "4.13.9",
+    "ip-address": "10.7.2",
+    "minimatch@3": {
+      "brace-expansion": "1.1.21"
+    },
+    "minimatch@10": {
+      "brace-expansion": "5.0.12"
     }
   },
   "engines": {
