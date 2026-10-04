@@ -29,6 +29,8 @@ The final dossier manifest records the exact source commit, official `.pbiviz` S
 | Screenshots | Three actual packaged renders in `dist\submission-assets`, each 1366 x 768 PNG and at most 1024KB |
 | Offline report project | [Bound PBIP documentation](PBIP-SAMPLE.md); final custom visual embedded by the local generator |
 | Required sample PBIX | **Pending genuine Desktop open/refresh/save by coordinator; PBIP is not a substitute** |
+| Full dependency audit | **Blocked as of 2026-10-04:** production-only audit has zero vulnerabilities, but full `npm audit` on the existing PR #4 snapshot reports 6 high advisories through `braces@3.0.3` / `powerbi-visuals-tools@7.2.1` (GHSA-vfj7-8cjw-p6xm; no first patched version reported). Do not claim the historical 2026-09-09 zero-advisory result as current or apply the offered major tooling downgrade without a compatible tested fix. |
+| Latest native report acceptance | **Pending:** existing PBIX archive has a DataModel and its embedded manifest/resource match the isolated PR #4 build, but its provenance and successful post-fix Desktop Refresh/page rendering have not been independently established here. A prior witnessed refresh on older source showed Error_Columns on all three statement pages. Coordinator must confirm the latest PBIX after Refresh before native acceptance. |
 | Notices | Full shipped dependency notices embedded in each package's `ThirdParty_Notices` resource and supplied separately |
 
 The source branch must not move underneath a submitted candidate. Do not force-push or overwrite another owner's `certification` ref. If changes are required after review/submission, the coordinator selects a new candidate and repeats all applicable gates rather than silently replacing submitted bytes.

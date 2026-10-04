@@ -30,7 +30,9 @@ The actual package ZIP, manifest, icon and localization checks passed, as did th
 
 The source-only sample checker also passed **526 assertions** for the supplied literal data, metadata and expected arithmetic. It does not execute M/DAX.
 
-Both **`npm audit --omit=dev` and the full `npm run audit:tooling` reported 0 advisories** in the final run. Earlier development-only findings were addressed using maintained `tsx` 4.23.13 and the development-graph `qs` 6.16.0 / SockJS-scoped `uuid` 11.1.1 overrides documented in the build guide. Zero known advisories at this snapshot is not a blanket security guarantee; preserve the outputs and reassess after lockfile changes or advisory updates.
+**Historical audit result (2026-09-09):** `npm audit --omit=dev` and the full `npm run audit:tooling` reported 0 advisories at that time. This result is superseded by the current check below and must not be treated as the present release gate.
+
+**Current audit status (2026-10-04, existing PR #4 snapshot):** `npm audit --omit=dev` reports 0 vulnerabilities; full `npm audit` reports 0 moderate and 6 high vulnerabilities. All six are dependency paths through `braces@3.0.3` in `powerbi-visuals-tools@7.2.1`, tracked by GHSA-vfj7-8cjw-p6xm (affected `<=3.0.3`; GitHub advisory reports no first patched version). The registry's latest `braces` remains 3.0.3; npm's suggested automatic fix downgrades `powerbi-visuals-tools` to 1.7.2, a major downgrade that was not applied. The full-audit gate is therefore **blocked**, despite the clean production-only audit. Do not claim zero full-tree advisories or conceal this result with an unsafe downgrade/override.
 
 Release-quality validation is local only. The former GitHub workflow has been removed; no GitHub-hosted CI/CD or cloud build is permitted. Preserve actual local command output and artifact hashes rather than relying on a remote badge or earlier build.
 
@@ -38,7 +40,8 @@ Release-quality validation is local only. The former GitHub workflow has been re
 
 - [ ] Record commit, Node/npm versions and lockfile used.
 - [ ] Run `npm ci`, provision Chromium, and run `npm run verify`; preserve logs and investigate failures.
-- [ ] Run/review `npm run audit:tooling`; triage build-only advisories separately from runtime issues.
+- [ ] Resolve the current full-tree high advisories through an upstream patch or a compatible, tested tooling update; rerun `npm audit` and `npm run audit:tooling`. Do not use the npm-suggested major downgrade to powerbi-visuals-tools 1.7.2 merely to clear the audit.
+- [ ] Reopen/refresh the exact version-matched native sample in Desktop after the latest model fixes; verify P&L, Balance Sheet and Cash Flow display values and record the precise remaining host warnings. The previously observed Error_Columns state is not native acceptance evidence for the later source/package.
 - [ ] Run `npm run release:local` from the clean final source commit and preserve every local command log; no GitHub-hosted CI/CD.
 - [ ] Confirm `eslint-plugin-powerbi-visuals` is installed, recommended runtime-source rules are active, and `npm run eslint` uses Microsoft's documented script.
 - [ ] Record exact `.pbiviz` SHA-256; validate the current `pbiviz.json` GUID and version.
