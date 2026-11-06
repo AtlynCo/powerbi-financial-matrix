@@ -30,7 +30,7 @@ The actual package ZIP, manifest, icon and localization checks passed, as did th
 
 The source-only sample checker also passed **526 assertions** for the supplied literal data, metadata and expected arithmetic. It does not execute M/DAX.
 
-Both **`npm audit --omit=dev` and the full `npm run audit:tooling` reported 0 advisories** in the final run. Earlier development-only findings were addressed using maintained `tsx` 4.23.13 and the development-graph `qs` 6.16.0 / SockJS-scoped `uuid` 11.1.1 overrides documented in the build guide. Zero known advisories at this snapshot is not a blanket security guarantee; preserve the outputs and reassess after lockfile changes or advisory updates.
+Historical evidence recorded both **`npm audit --omit=dev` and the full `npm run audit:tooling` reporting 0 advisories** at that earlier snapshot. This is not the current release status: November 4 re-verification passed the production audit but reported 26 tooling findings. The compatible remediation candidate and the unsupported minimatch-major boundary are documented in the [build guide](BUILD-AND-IMPORT.md#november-4-2026-compatible-remediation-candidate); fresh audits are pending coordinated access after the shared Retry-After boundary. The former qs override was removed to allow parent-supported updates; the SockJS-scoped uuid override remains unchanged. Do not reuse historical zero-advisory results for the refreshed lockfile.
 
 Release-quality validation is local only. The former GitHub workflow has been removed; no GitHub-hosted CI/CD or cloud build is permitted. Preserve actual local command output and artifact hashes rather than relying on a remote badge or earlier build.
 

@@ -44,7 +44,7 @@ for (const filename of ["test-results/browser-results.json", "dist/evidence-runn
   assert.equal(report.stats.unexpected, 0, `${filename}: failures`);
   assert.equal(report.stats.flaky, 0, `${filename}: flaky results`);
   assert.equal(report.stats.skipped, 0, `${filename}: skipped results`);
-  assert.equal(report.stats.expected, filename.includes("browser-results") ? 22 : 2, `${filename}: full required suite was not executed`);
+  assert.equal(report.stats.expected, filename.includes("browser-results") ? 23 : 2, `${filename}: full required suite was not executed`);
 }
 const report = {
   validatedAt: new Date().toISOString(), packageSha256: artifact.sha256,
