@@ -3,7 +3,7 @@
 ## Prerequisites and boundaries
 
 - Windows Power BI Desktop for assembling/importing the sample report.
-- Node.js **22.12 or newer**, npm and a checkout of this private repository.
+- Node.js **22.12 or newer**, npm and a checkout of this private repository. The current local remediation baseline is Node **22.23.2** with npm **10.9.8**; use its executable directly rather than changing a shared machine's active Node version.
 - .NET SDK **8 or newer** for the optional standalone PBIP check and required full release gate's official TMDL parser; pinned NuGet packages/lockfile and isolated caches are documented in [PBIP sample](PBIP-SAMPLE.md).
 - For Windows builds: **PowerShell 7 (`pwsh`) on PATH**, using a currently supported release for the .NET cryptography APIs in the certificate helper. The non-Windows build path instead requires **OpenSSL on PATH**; Desktop report assembly still requires Windows.
 - Network access for **initial dependency/browser acquisition only**, unless dependencies/browser binaries have been pre-provisioned through your approved process.
@@ -55,10 +55,39 @@ This is build-time compatibility handling, **not** a runtime certificate require
 | `powerbi-visuals-utils-formattingmodel` **7.1.0** | Modern format-pane controls. |
 | `powerbi-visuals-utils-formattingutils` **7.0.0** | Host-compatible numeric formatting with offline culture data. |
 | `tsx` **4.23.13** | Maintained TypeScript test runner update; development-only, not a visual runtime dependency. |
-| `qs` override **6.16.0** | Advisory remediation for the current build/dev-server transitive query-string parser; currently in the development graph. |
+| `typescript-eslint` **8.72.1** | Compatible 8.x lint-tooling update. This is not permission to override its transitive dependency contracts. |
+| `qs` | The old **6.16.0** override was removed so parent-supported 6.x updates can resolve normally. |
 | `sockjs`-scoped `uuid` override **11.1.1** | Targets the development server's SockJS dependency. Its use is the compatible CommonJS `require('uuid').v4()` API; unrelated UUID consumers are not globally overridden. |
 
 These are deliberate, pinned build/test dependency changes, not permission to blanket-upgrade the graph. Re-run packaging, browser tests and both audits after changing them, and confirm that a development-only override has not gained a runtime consumer. The lockfile and generated dependency notices must track the actual graph. An attempted advisory fix is not a clean-audit result until the new audit completes.
+
+#### November 4, 2026 compatible remediation candidate
+
+The prior verification actually ran: production audit passed, full tooling audit reported
+26 findings, and the evidence validator rejected 23 passing browser tests because it
+still required 22. The validator now requires the current 23-test suite. Prior package,
+sample and verification outputs are preserved under ignored
+`.tmp\release-prior-20261104`; current remediation logs are under `dist\remediation`.
+
+The compatible lockfile refresh uses parent-supported ranges, including MCP SDK
+1.32.2, proxy-addr 2.0.8, shell-quote 1.12.0 and the parent-selected qs 6.x
+releases. It adds no overrides; the existing SockJS-scoped uuid override is unchanged.
+Do not interpret these version changes as a successful vulnerability audit.
+
+On November 6 the owner approved the separately tested build-only exception:
+`"@typescript-eslint/typescript-estree": { "minimatch": "11.0.1" }`.
+It remains outside the consumer's declared `^10.2.2` range; owner approval is not
+upstream support. The isolated offline trial passed matcher/project-service probes,
+typecheck/lint, units, packaging and browser/sample checks. Its PBIVIZ ZIP differed
+but both extracted payload files matched the compatible candidate byte-for-byte.
+The approved source now uses exactly that trial lock. No runtime minimatch consumer
+was identified; all installed minimatch entries are development-only. Do not apply
+this exception to unrelated consumers or use `npm audit fix --force`.
+
+Audit requests are deliberately deferred until after the shared Retry-After boundary
+of **2026-11-04 22:48:42 UTC**, and require coordinator scheduling before retrying.
+No registry switch or advisory request is part of the compatible refresh. The final
+owner-approved promotion is offline-only; fresh audits are not run or claimed.
 
 ### Commands
 

@@ -44,12 +44,14 @@
     "powerbi-visuals-tools": "7.2.1",
     "tsx": "4.23.13",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.56.1"
+    "typescript-eslint": "8.72.1"
   },
   "overrides": {
-    "qs": "6.16.0",
     "sockjs": {
       "uuid": "11.1.1"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
     }
   },
   "engines": {
